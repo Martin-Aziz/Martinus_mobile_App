@@ -3,7 +3,7 @@ import SwiftUI
 import SwiftData
 
 // MARK: - Widget Timeline Entry
-struct FocusFlowEntry: TimelineEntry {
+struct MartinusEntry: TimelineEntry {
     var date:        Date
     var focusTitle:  String
     var taskCount:   Int
@@ -14,11 +14,11 @@ struct FocusFlowEntry: TimelineEntry {
 }
 
 // MARK: - Widget Provider
-struct FocusFlowProvider: TimelineProvider {
-    typealias Entry = FocusFlowEntry
+struct MartinusProvider: TimelineProvider {
+    typealias Entry = MartinusEntry
 
-    func placeholder(in context: Context) -> FocusFlowEntry {
-        FocusFlowEntry(
+    func placeholder(in context: Context) -> MartinusEntry {
+        MartinusEntry(
             date:           Date(),
             focusTitle:     "Finish startup pitch deck",
             taskCount:      5,
@@ -29,11 +29,11 @@ struct FocusFlowProvider: TimelineProvider {
         )
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (FocusFlowEntry) -> Void) {
+    func getSnapshot(in context: Context, completion: @escaping (MartinusEntry) -> Void) {
         completion(placeholder(in: context))
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<FocusFlowEntry>) -> Void) {
+    func getTimeline(in context: Context, completion: @escaping (Timeline<MartinusEntry>) -> Void) {
         // In a full production implementation, this reads from an App Group shared UserDefaults
         // that the main app writes to whenever data changes.
         let entry = loadEntry()
@@ -41,8 +41,8 @@ struct FocusFlowProvider: TimelineProvider {
         completion(Timeline(entries: [entry], policy: .after(nextUpdate)))
     }
 
-    private func loadEntry() -> FocusFlowEntry {
-        let defaults    = UserDefaults(suiteName: "group.com.focusflow.app")
+    private func loadEntry() -> MartinusEntry {
+        let defaults    = UserDefaults(suiteName: "group.com.martinaziz.martinus")
         let focusTitle  = defaults?.string(forKey: "widget.focusTitle")  ?? "Set your focus"
         let taskCount   = defaults?.integer(forKey: "widget.taskCount")  ?? 0
         let completed   = defaults?.integer(forKey: "widget.completed")  ?? 0
@@ -50,7 +50,7 @@ struct FocusFlowProvider: TimelineProvider {
         let quoteText   = defaults?.string(forKey: "widget.quoteText")   ?? "Small steps. Big results."
         let quoteAuthor = defaults?.string(forKey: "widget.quoteAuthor") ?? "Martinus"
 
-        return FocusFlowEntry(
+        return MartinusEntry(
             date:           Date(),
             focusTitle:     focusTitle,
             taskCount:      taskCount,
@@ -64,7 +64,7 @@ struct FocusFlowProvider: TimelineProvider {
 
 // MARK: - Small Widget View (2×2)
 struct SmallWidgetView: View {
-    var entry: FocusFlowEntry
+    var entry: MartinusEntry
 
     var body: some View {
         ZStack {
@@ -113,7 +113,7 @@ struct SmallWidgetView: View {
 
 // MARK: - Medium Widget View (4×2)
 struct MediumWidgetView: View {
-    var entry: FocusFlowEntry
+    var entry: MartinusEntry
 
     var body: some View {
         ZStack {
@@ -198,7 +198,7 @@ struct MediumWidgetView: View {
 
 // MARK: - Lock Screen Widget (accessoryRectangular)
 struct LockScreenWidgetView: View {
-    var entry: FocusFlowEntry
+    var entry: MartinusEntry
 
     var body: some View {
         HStack(spacing: 8) {
@@ -213,20 +213,20 @@ struct LockScreenWidgetView: View {
 
 // MARK: - Widget Bundle
 @main
-struct FocusFlowWidgetBundle: WidgetBundle {
+struct MartinusWidgetBundle: WidgetBundle {
     var body: some Widget {
-        FocusFlowHomeWidget()
-        FocusFlowLockScreenWidget()
+        MartinusHomeWidget()
+        MartinusLockScreenWidget()
     }
 }
 
 // MARK: - Home Screen Widget
-struct FocusFlowHomeWidget: Widget {
-    let kind = "FocusFlowHomeWidget"
+struct MartinusHomeWidget: Widget {
+    let kind = "MartinusHomeWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: FocusFlowProvider()) { entry in
-            FocusFlowHomeWidgetEntryView(entry: entry)
+        StaticConfiguration(kind: kind, provider: MartinusProvider()) { entry in
+            MartinusHomeWidgetEntryView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
         }
         .configurationDisplayName("Martinus")
@@ -236,9 +236,9 @@ struct FocusFlowHomeWidget: Widget {
 }
 
 // MARK: - Home Screen Widget Entry View
-struct FocusFlowHomeWidgetEntryView: View {
+struct MartinusHomeWidgetEntryView: View {
     @Environment(\.widgetFamily) var family
-    var entry: FocusFlowEntry
+    var entry: MartinusEntry
 
     var body: some View {
         switch family {
@@ -253,11 +253,11 @@ struct FocusFlowHomeWidgetEntryView: View {
 }
 
 // MARK: - Lock Screen Widget
-struct FocusFlowLockScreenWidget: Widget {
-    let kind = "FocusFlowLockScreenWidget"
+struct MartinusLockScreenWidget: Widget {
+    let kind = "MartinusLockScreenWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: FocusFlowProvider()) { entry in
+        StaticConfiguration(kind: kind, provider: MartinusProvider()) { entry in
             LockScreenWidgetView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
         }

@@ -1,6 +1,6 @@
 import XCTest
 import SwiftData
-@testable import FocusFlow
+@testable import Martinus
 
 // MARK: - HomeViewModel Tests
 @MainActor

@@ -73,7 +73,7 @@
 
 **Context:** The spec explicitly states: "The application must not invent quotes or incorrectly attribute them." Quotes are displayed with author name and are used for motivation.
 
-**Decision:** Ship a curated, manually verified seed of 60 quotes. FocusFlow-original guidance is clearly labeled as "FocusFlow Guidance" with no external attribution.
+**Decision:** Ship a curated, manually verified seed of 60 quotes. Martinus-original guidance is clearly labeled as "Martinus Guidance" with no external attribution.
 
 **Rationale:**
 - Misattributed quotes (extremely common in apps/internet) damage credibility
@@ -147,14 +147,14 @@
 
 **Context:** WidgetKit extensions cannot access the main app's SwiftData store directly. They need a lightweight shared data channel.
 
-**Decision:** Use `UserDefaults(suiteName: "group.com.focusflow.app")` as the data bridge. The main app writes `widget.focusTitle`, `widget.taskCount`, `widget.completed`, `widget.streak`, and `widget.quoteText` whenever these values change.
+**Decision:** Use `UserDefaults(suiteName: "group.com.martinaziz.martinus")` as the data bridge. The main app writes `widget.focusTitle`, `widget.taskCount`, `widget.completed`, `widget.streak`, and `widget.quoteText` whenever these values change.
 
 **Rationale:**
 - Standard Apple pattern for widget data sharing
 - No additional dependencies, no file coordination
 - Lightweight for the small amount of data widgets need
 
-**Implementation note:** The main app must add "App Groups" entitlement with group ID `group.com.focusflow.app` and write to UserDefaults after every state mutation. This integration point is architecturally complete but requires the entitlement to be configured in Xcode before the widget can read live data.
+**Implementation note:** The main app must add "App Groups" entitlement with group ID `group.com.martinaziz.martinus` and write to UserDefaults after every state mutation. This integration point is architecturally complete but requires the entitlement to be configured in Xcode before the widget can read live data.
 
 ---
 
@@ -169,4 +169,4 @@
 | 5 | Streak logic increments when any task is completed on a given day | Simplified; production version should require journal entry + ≥1 task completion |
 | 6 | iOS 17.0 minimum deployment target | Enables SwiftData, `@Observable`, and new `containerBackground` widget API |
 | 7 | Dark mode is default; light mode respects system | Design spec shows both; app-level `preferredColorScheme(.dark)` with per-user override in Settings |
-| 8 | Bundle ID is `com.focusflow.app` | Placeholder; must be replaced with a registered Apple Developer account Bundle ID before submission |
+| 8 | Bundle ID is `com.martinaziz.martinus` | Placeholder; must be replaced with a registered Apple Developer account Bundle ID before submission |

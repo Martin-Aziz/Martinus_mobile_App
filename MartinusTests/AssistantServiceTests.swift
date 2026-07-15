@@ -1,5 +1,5 @@
 import XCTest
-@testable import FocusFlow
+@testable import Martinus
 
 // MARK: - AssistantService Tests
 final class AssistantServiceTests: XCTestCase {

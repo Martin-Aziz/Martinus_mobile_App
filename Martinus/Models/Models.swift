@@ -444,7 +444,7 @@ final class Quote {
     var category:    QuoteCategory
     var explanation: String        // simple language explanation
     var isFavorited: Bool
-    var isFocusFlow: Bool          // true = original FocusFlow guidance
+    var isMartinus: Bool          // true = original Martinus guidance
     var createdAt:   Date
 
     init(
@@ -453,7 +453,7 @@ final class Quote {
         category:    QuoteCategory,
         explanation: String,
         source:      String? = nil,
-        isFocusFlow: Bool    = false
+        isMartinus: Bool    = false
     ) {
         self.id          = UUID()
         self.text        = text
@@ -462,12 +462,12 @@ final class Quote {
         self.category    = category
         self.explanation = explanation
         self.isFavorited = false
-        self.isFocusFlow = isFocusFlow
+        self.isMartinus = isMartinus
         self.createdAt   = Date()
     }
 
     var displayAuthor: String {
-        isFocusFlow ? "Martinus Guidance" : author
+        isMartinus ? "Martinus Guidance" : author
     }
 }
 

@@ -162,7 +162,7 @@ enum QuotesSeed {
               author: "Martinus Guidance",
               category: .startups,
               explanation: "Speed of learning is the most defensible startup advantage. Ship imperfect things, gather real feedback, and iterate relentlessly.",
-              isFocusFlow: true),
+              isMartinus: true),
 
         Quote(text: "The way to get started is to quit talking and begin doing.",
               author: "Walt Disney",
@@ -319,7 +319,7 @@ enum QuotesSeed {
               author: "Martinus Guidance",
               category: .decisions,
               explanation: "Every choice you make — small and large — is authoring the story of your life. Sharpen your decision-making skills as you would any vital tool.",
-              isFocusFlow: true),
+              isMartinus: true),
 
         Quote(text: "Regret for the things we did can be tempered by time; it is regret for the things we did not do that is inconsolable.",
               author: "Sydney J. Harris",
@@ -394,7 +394,7 @@ enum QuotesSeed {
               author: "Martinus Guidance",
               category: .mindset,
               explanation: "Whatever you consistently focus on expands in your life. Point your attention deliberately toward what you want to grow.",
-              isFocusFlow: true),
+              isMartinus: true),
     ]
     // swiftlint:enable line_length
 }

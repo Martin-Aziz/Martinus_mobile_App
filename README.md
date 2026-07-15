@@ -17,8 +17,8 @@ The application feels calm, intelligent, personal, and supportive. It never feel
 ## Technical Architecture
 
 ```
-FocusFlow/
-├── FocusFlowApp.swift          # @main entry, ModelContainer
+Martinus/
+├── MartinusApp.swift          # @main entry, ModelContainer
 ├── ContentView.swift           # Root TabView, sheet coordinator
 ├── Core/
 │   ├── Design/
@@ -48,10 +48,10 @@ FocusFlow/
 └── Seeds/
     └── QuotesSeed.swift        # 60 verified, attributed quotes
 
-FocusFlowWidget/
-└── FocusFlowWidget.swift       # Small, Medium (systemSmall/Medium) + Lock Screen widgets
+MartinusWidget/
+└── MartinusWidget.swift       # Small, Medium (systemSmall/Medium) + Lock Screen widgets
 
-FocusFlowTests/
+MartinusTests/
 ├── AssistantServiceTests.swift
 ├── ModelTests.swift
 └── ViewModelTests.swift
@@ -102,10 +102,10 @@ User Action → SwiftUI View → ViewModel (Observable) → Repository → Swift
 
 2. Open the project
    ```bash
-   open FocusFlow.xcodeproj
+   open Martinus.xcodeproj
    ```
 
-3. Select your development team in **Signing & Capabilities** for both `FocusFlow` and `FocusFlowWidget` targets
+3. Select your development team in **Signing & Capabilities** for both `Martinus` and `MartinusWidget` targets
 
 4. Run on Simulator or Device
    ```
@@ -124,8 +124,8 @@ Cmd + U
 
 # Via xcodebuild (simulator)
 xcodebuild test \
-  -project FocusFlow.xcodeproj \
-  -scheme FocusFlow \
+  -project Martinus.xcodeproj \
+  -scheme Martinus \
   -destination 'platform=iOS Simulator,name=iPhone 15 Pro'
 ```
 
@@ -168,7 +168,7 @@ See [DECISIONS.md](DECISIONS.md) for full rationale.
 | State management | `@Observable` + `@Environment` | ObservableObject (older), Redux (overkill) |
 | UI framework | SwiftUI | UIKit (more control, more boilerplate) |
 | Architecture | MVVM + Repository | MVC (no separation), Clean Architecture (over-engineered for solo app) |
-| Quote attribution | Manual curation + FocusFlow Guidance label | AI generation (inaccurate, risky) |
+| Quote attribution | Manual curation + Martinus Guidance label | AI generation (inaccurate, risky) |
 | Calendar access | EventKit read-only | No calendar (reduced value) |
 | Local notifications | UNUserNotificationCenter | Background fetch only (less timely) |
 

@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct FocusFlowApp: App {
+struct MartinusApp: App {
     @State private var appState = AppState()
     @Environment(\.scenePhase) private var scenePhase
 
@@ -16,7 +16,7 @@ struct FocusFlowApp: App {
             UserProfile.self,
             AnalyticsEvent.self      // PM artifact: kill-metric tracking
         ])
-        let config = ModelConfiguration("FocusFlow", schema: schema, isStoredInMemoryOnly: false)
+        let config = ModelConfiguration("Martinus", schema: schema, isStoredInMemoryOnly: false)
         do {
             return try ModelContainer(for: schema, configurations: [config])
         } catch {

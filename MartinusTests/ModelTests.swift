@@ -1,5 +1,5 @@
 import XCTest
-@testable import FocusFlow
+@testable import Martinus
 
 // MARK: - FocusTask Model Tests
 final class ModelTests: XCTestCase {
@@ -102,8 +102,8 @@ final class ModelTests: XCTestCase {
 
     // MARK: - Quote
 
-    func test_quote_displayAuthor_whenFocusFlow() {
-        let q = Quote(text: "Stay focused.", author: "", category: .focus, explanation: "Test", isFocusFlow: true)
+    func test_quote_displayAuthor_whenMartinus() {
+        let q = Quote(text: "Stay focused.", author: "", category: .focus, explanation: "Test", isMartinus: true)
         XCTAssertEqual(q.displayAuthor, "Martinus Guidance")
     }
 
