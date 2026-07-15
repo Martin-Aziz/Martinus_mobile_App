@@ -1,0 +1,592 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA000001 /* FocusFlowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000101 /* FocusFlowApp.swift */; };
+		AA000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000102 /* ContentView.swift */; };
+		AA000003 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000103 /* AppState.swift */; };
+		AA000004 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000104 /* AppTheme.swift */; };
+		AA000005 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000105 /* Extensions.swift */; };
+		AA000006 /* SharedComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000106 /* SharedComponents.swift */; };
+		AA000007 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000107 /* Models.swift */; };
+		AA000008 /* Repositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000108 /* Repositories.swift */; };
+		AA000009 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000109 /* NotificationService.swift */; };
+		AA000010 /* CalendarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000110 /* CalendarService.swift */; };
+		AA000011 /* FocusSessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000111 /* FocusSessionService.swift */; };
+		AA000012 /* AssistantService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000112 /* AssistantService.swift */; };
+		AA000013 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000113 /* HomeView.swift */; };
+		AA000014 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000114 /* HomeViewModel.swift */; };
+		AA000015 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000115 /* TodayView.swift */; };
+		AA000016 /* AddTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000116 /* AddTaskView.swift */; };
+		AA000017 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000117 /* GoalsView.swift */; };
+		AA000018 /* JournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000118 /* JournalView.swift */; };
+		AA000019 /* QuotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000119 /* QuotesView.swift */; };
+		AA000020 /* MoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000120 /* MoreView.swift */; };
+		AA000021 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000121 /* OnboardingView.swift */; };
+		AA000022 /* QuotesSeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000122 /* QuotesSeed.swift */; };
+		AA000023 /* GoalHealthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000123 /* GoalHealthService.swift */; };
+		AA000024 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000124 /* AnalyticsService.swift */; };
+		AA000025 /* ReentryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000125 /* ReentryView.swift */; };
+		AA000051 /* FocusFlowWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000151 /* FocusFlowWidget.swift */; };
+		AA000061 /* AssistantServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000161 /* AssistantServiceTests.swift */; };
+		AA000062 /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000162 /* ModelTests.swift */; };
+		AA000063 /* ViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000163 /* ViewModelTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AA000101 /* FocusFlowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusFlowApp.swift; sourceTree = "<group>"; };
+		AA000102 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AA000103 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/AppState.swift; sourceTree = "<group>"; };
+		AA000104 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Design/AppTheme.swift; sourceTree = "<group>"; };
+		AA000105 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Extensions/Extensions.swift; sourceTree = "<group>"; };
+		AA000106 /* SharedComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Components/SharedComponents.swift; sourceTree = "<group>"; };
+		AA000107 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/Models.swift; sourceTree = "<group>"; };
+		AA000108 /* Repositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repositories/Repositories.swift; sourceTree = "<group>"; };
+		AA000109 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/NotificationService.swift; sourceTree = "<group>"; };
+		AA000110 /* CalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CalendarService.swift; sourceTree = "<group>"; };
+		AA000111 /* FocusSessionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/FocusSessionService.swift; sourceTree = "<group>"; };
+		AA000112 /* AssistantService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/AssistantService.swift; sourceTree = "<group>"; };
+		AA000113 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Home/HomeView.swift; sourceTree = "<group>"; };
+		AA000114 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Home/HomeViewModel.swift; sourceTree = "<group>"; };
+		AA000115 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Today/TodayView.swift; sourceTree = "<group>"; };
+		AA000116 /* AddTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Today/AddTaskView.swift; sourceTree = "<group>"; };
+		AA000117 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Goals/GoalsView.swift; sourceTree = "<group>"; };
+		AA000118 /* JournalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Journal/JournalView.swift; sourceTree = "<group>"; };
+		AA000119 /* QuotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Quotes/QuotesView.swift; sourceTree = "<group>"; };
+		AA000120 /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/More/MoreView.swift; sourceTree = "<group>"; };
+		AA000121 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Onboarding/OnboardingView.swift; sourceTree = "<group>"; };
+		AA000122 /* QuotesSeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Seeds/QuotesSeed.swift; sourceTree = "<group>"; };
+		AA000123 /* GoalHealthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/GoalHealthService.swift; sourceTree = "<group>"; };
+		AA000124 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/AnalyticsService.swift; sourceTree = "<group>"; };
+		AA000125 /* ReentryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Onboarding/ReentryView.swift; sourceTree = "<group>"; };
+		AA000151 /* FocusFlowWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusFlowWidget.swift; sourceTree = "<group>"; };
+		AA000161 /* AssistantServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantServiceTests.swift; sourceTree = "<group>"; };
+		AA000162 /* ModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTests.swift; sourceTree = "<group>"; };
+		AA000163 /* ViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTests.swift; sourceTree = "<group>"; };
+		AA000200 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA000201 /* WidgetInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = WidgetInfo.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		AAROOT /* / */ = {
+			isa = PBXGroup;
+			children = (
+				AAAPPGROUP /* FocusFlow */,
+				AAWIDGETGROUP /* FocusFlowWidget */,
+				AATESTSGROUP /* FocusFlowTests */,
+				AAPROD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AAPROD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA000300 /* FocusFlow.app */,
+				AA000301 /* FocusFlowWidget.appex */,
+				AA000302 /* FocusFlowTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AAAPPGROUP /* FocusFlow */ = {
+			isa = PBXGroup;
+			children = (
+				AA000101,
+				AA000102,
+				AA000103,
+				AA000200,
+				AACOREGROUP,
+				AAMODELS,
+				AAREPOS,
+				AASERVICES,
+				AAFEATURES,
+				AASEEDS,
+			);
+			path = FocusFlow;
+			sourceTree = "<group>";
+		};
+		AACOREGROUP /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				AA000104,
+				AA000105,
+				AA000106,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		AAMODELS /* Models */ = {
+			isa = PBXGroup;
+			children = (AA000107);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		AAREPOS /* Repositories */ = {
+			isa = PBXGroup;
+			children = (AA000108);
+			name = Repositories;
+			sourceTree = "<group>";
+		};
+		AASERVICES /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AA000109,
+				AA000110,
+				AA000111,
+				AA000112,
+				AA000123,
+				AA000124,
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
+		AAFEATURES /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				AA000113,
+				AA000114,
+				AA000115,
+				AA000116,
+				AA000117,
+				AA000118,
+				AA000119,
+				AA000120,
+				AA000121,
+				AA000125,
+			);
+			name = Features;
+			sourceTree = "<group>";
+		};
+		AASEEDS /* Seeds */ = {
+			isa = PBXGroup;
+			children = (AA000122);
+			name = Seeds;
+			sourceTree = "<group>";
+		};
+		AAWIDGETGROUP /* FocusFlowWidget */ = {
+			isa = PBXGroup;
+			children = (
+				AA000151,
+				AA000201,
+			);
+			path = FocusFlowWidget;
+			sourceTree = "<group>";
+		};
+		AATESTSGROUP /* FocusFlowTests */ = {
+			isa = PBXGroup;
+			children = (
+				AA000161,
+				AA000162,
+				AA000163,
+			);
+			path = FocusFlowTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXFileReference section — Products */
+		AA000300 /* FocusFlow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FocusFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA000301 /* FocusFlowWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FocusFlowWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA000302 /* FocusFlowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FocusFlowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXNativeTarget section */
+		AATARGET_APP /* FocusFlow */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AABUILDCFG_APP_LIST;
+			buildPhases = (
+				AABUILD_APP_SOURCES,
+				AABUILD_APP_FRAMEWORKS,
+				AABUILD_APP_RESOURCES,
+			);
+			dependencies = (AADEP_WIDGET);
+			name = FocusFlow;
+			productName = FocusFlow;
+			productReference = AA000300 /* FocusFlow.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AATARGET_WIDGET /* FocusFlowWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AABUILDCFG_WIDGET_LIST;
+			buildPhases = (
+				AABUILD_WIDGET_SOURCES,
+				AABUILD_WIDGET_FRAMEWORKS,
+			);
+			dependencies = ();
+			name = FocusFlowWidget;
+			productName = FocusFlowWidget;
+			productReference = AA000301 /* FocusFlowWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		AATARGET_TESTS /* FocusFlowTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AABUILDCFG_TESTS_LIST;
+			buildPhases = (AABUILD_TEST_SOURCES);
+			dependencies = (AADEP_TESTS);
+			name = FocusFlowTests;
+			productName = FocusFlowTests;
+			productReference = AA000302;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AAPROJECT /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1530;
+				LastUpgradeCheck = 1530;
+				TargetAttributes = {
+					AATARGET_APP = {
+						CreatedOnToolsVersion = 15.3;
+					};
+					AATARGET_WIDGET = {
+						CreatedOnToolsVersion = 15.3;
+					};
+					AATARGET_TESTS = {
+						CreatedOnToolsVersion = 15.3;
+						TestTargetID = AATARGET_APP;
+					};
+				};
+			};
+			buildConfigurationList = AABUILDCFG_PROJECT_LIST;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (en, Base);
+			mainGroup = AAROOT;
+			productRefGroup = AAPROD;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AATARGET_APP,
+				AATARGET_WIDGET,
+				AATARGET_TESTS,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AABUILD_APP_SOURCES = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000001, AA000002, AA000003, AA000004, AA000005,
+				AA000006, AA000007, AA000008, AA000009, AA000010,
+				AA000011, AA000012, AA000013, AA000014, AA000015,
+				AA000016, AA000017, AA000018, AA000019, AA000020,
+				AA000021, AA000022,
+				AA000023, AA000024, AA000025,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AABUILD_WIDGET_SOURCES = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (AA000051);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AABUILD_TEST_SOURCES = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (AA000061, AA000062, AA000063);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AABUILD_APP_FRAMEWORKS = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AABUILD_WIDGET_FRAMEWORKS = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AABUILD_APP_RESOURCES = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AADEP_WIDGET = {
+			isa = PBXTargetDependency;
+			target = AATARGET_WIDGET;
+			targetProxy = AADEP_WIDGET_PROXY;
+		};
+		AADEP_WIDGET_PROXY = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AAPROJECT;
+			proxyType = 1;
+			remoteGlobalIDString = AATARGET_WIDGET;
+			remoteInfo = FocusFlowWidget;
+		};
+		AADEP_TESTS = {
+			isa = PBXTargetDependency;
+			target = AATARGET_APP;
+			targetProxy = AADEP_TESTS_PROXY;
+		};
+		AADEP_TESTS_PROXY = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AAPROJECT;
+			proxyType = 1;
+			remoteGlobalIDString = AATARGET_APP;
+			remoteInfo = FocusFlow;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		AACFG_PROJECT_DEBUG = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("DEBUG=1", "$(inherited)");
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AACFG_PROJECT_RELEASE = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AACFG_APP_DEBUG = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FocusFlow/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks");
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.focusflow.app";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		AACFG_APP_RELEASE = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FocusFlow/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks");
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.focusflow.app";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		AACFG_WIDGET_DEBUG = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FocusFlowWidget/WidgetInfo.plist;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@executable_path/../../Frameworks");
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.focusflow.app.widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		AACFG_WIDGET_RELEASE = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FocusFlowWidget/WidgetInfo.plist;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@executable_path/../../Frameworks");
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.focusflow.app.widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		AACFG_TESTS_DEBUG = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.focusflow.app.tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FocusFlow.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FocusFlow";
+			};
+			name = Debug;
+		};
+		AACFG_TESTS_RELEASE = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.focusflow.app.tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FocusFlow.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FocusFlow";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AABUILDCFG_PROJECT_LIST = {
+			isa = XCConfigurationList;
+			buildConfigurations = (AACFG_PROJECT_DEBUG, AACFG_PROJECT_RELEASE);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AABUILDCFG_APP_LIST = {
+			isa = XCConfigurationList;
+			buildConfigurations = (AACFG_APP_DEBUG, AACFG_APP_RELEASE);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AABUILDCFG_WIDGET_LIST = {
+			isa = XCConfigurationList;
+			buildConfigurations = (AACFG_WIDGET_DEBUG, AACFG_WIDGET_RELEASE);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AABUILDCFG_TESTS_LIST = {
+			isa = XCConfigurationList;
+			buildConfigurations = (AACFG_TESTS_DEBUG, AACFG_TESTS_RELEASE);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = AAPROJECT /* Project object */;
+}
