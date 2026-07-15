@@ -104,7 +104,7 @@ final class ModelTests: XCTestCase {
 
     func test_quote_displayAuthor_whenFocusFlow() {
         let q = Quote(text: "Stay focused.", author: "", category: .focus, explanation: "Test", isFocusFlow: true)
-        XCTAssertEqual(q.displayAuthor, "FocusFlow Guidance")
+        XCTAssertEqual(q.displayAuthor, "Martinus Guidance")
     }
 
     func test_quote_displayAuthor_whenRealAuthor() {

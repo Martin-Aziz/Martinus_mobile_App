@@ -1,35 +1,36 @@
 import SwiftUI
 
-// MARK: - Typography System (SF Pro)
+// MARK: - Typography System
 extension Font {
+    private static var preferredDesign: Font.Design { AppFontStyle.saved.design }
     // Display (SF Pro Display)
-    static let ffDisplay1  = Font.system(size: 34, weight: .bold,      design: .default)
-    static let ffDisplay2  = Font.system(size: 28, weight: .bold,      design: .default)
+    static var ffDisplay1: Font { .system(size: 34, weight: .bold, design: preferredDesign) }
+    static var ffDisplay2: Font { .system(size: 28, weight: .bold, design: preferredDesign) }
 
     // Headlines (SF Pro Display)
-    static let ffHeadline1 = Font.system(size: 22, weight: .semibold,  design: .default)
-    static let ffHeadline2 = Font.system(size: 20, weight: .semibold,  design: .default)
-    static let ffHeadline3 = Font.system(size: 18, weight: .semibold,  design: .default)
+    static var ffHeadline1: Font { .system(size: 22, weight: .semibold, design: preferredDesign) }
+    static var ffHeadline2: Font { .system(size: 20, weight: .semibold, design: preferredDesign) }
+    static var ffHeadline3: Font { .system(size: 18, weight: .semibold, design: preferredDesign) }
 
     // Body (SF Pro Text)
-    static let ffBody      = Font.system(size: 16, weight: .regular,   design: .default)
-    static let ffBodyMed   = Font.system(size: 16, weight: .medium,    design: .default)
-    static let ffBodySemi  = Font.system(size: 16, weight: .semibold,  design: .default)
+    static var ffBody: Font { .system(size: 16, weight: .regular, design: preferredDesign) }
+    static var ffBodyMed: Font { .system(size: 16, weight: .medium, design: preferredDesign) }
+    static var ffBodySemi: Font { .system(size: 16, weight: .semibold, design: preferredDesign) }
 
     // Subheadline
-    static let ffSubhead   = Font.system(size: 15, weight: .regular,   design: .default)
-    static let ffSubheadMed = Font.system(size: 15, weight: .medium,   design: .default)
+    static var ffSubhead: Font { .system(size: 15, weight: .regular, design: preferredDesign) }
+    static var ffSubheadMed: Font { .system(size: 15, weight: .medium, design: preferredDesign) }
 
     // Caption (SF Pro Text)
-    static let ffCaption   = Font.system(size: 13, weight: .medium,    design: .default)
-    static let ffCaption2  = Font.system(size: 12, weight: .regular,   design: .default)
+    static var ffCaption: Font { .system(size: 13, weight: .medium, design: preferredDesign) }
+    static var ffCaption2: Font { .system(size: 12, weight: .regular, design: preferredDesign) }
 
     // Monospaced (for timer)
-    static let ffMono      = Font.system(size: 48, weight: .thin,      design: .monospaced)
-    static let ffMonoSm    = Font.system(size: 24, weight: .light,     design: .monospaced)
+    static var ffMono: Font { .system(size: 48, weight: .thin, design: .monospaced) }
+    static var ffMonoSm: Font { .system(size: 24, weight: .light, design: .monospaced) }
 
     // Quote
-    static let ffQuote     = Font.system(size: 20, weight: .semibold,  design: .serif)
+    static var ffQuote: Font { .system(size: 20, weight: .semibold, design: preferredDesign == .default ? .serif : preferredDesign) }
 }
 
 // MARK: - View Extensions

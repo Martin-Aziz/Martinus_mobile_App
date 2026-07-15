@@ -12,7 +12,7 @@ struct OnboardingView: View {
     private let pages: [OnboardingPage] = [
         OnboardingPage(
             icon:      "sparkles",
-            title:     "Welcome to FocusFlow",
+            title:     "Welcome to Martinus",
             subtitle:  "Your personal assistant for goals, reflection, and motivation.",
             detail:    "Plan your day. Achieve your goals.\nReflect with intention. Stay motivated.",
             gradient:  .ffBrand
@@ -21,14 +21,14 @@ struct OnboardingView: View {
             icon:      "target",
             title:     "Set Meaningful Goals",
             subtitle:  "Break big goals into milestones and track real progress.",
-            detail:    "FocusFlow keeps your goals visible every day — not hidden in a list you never open.",
+            detail:    "Martinus keeps your goals visible every day — not hidden in a list you never open.",
             gradient:  .ffCyan
         ),
         OnboardingPage(
             icon:      "scope",
             title:     "One Focus at a Time",
             subtitle:  "Choose one main priority each day and protect your attention.",
-            detail:    "Your brain can only truly focus on one thing. FocusFlow helps you honor that reality.",
+            detail:    "Your brain can only truly focus on one thing. Martinus helps you honor that reality.",
             gradient:  .ffPurpleDeep
         ),
         OnboardingPage(
@@ -41,7 +41,7 @@ struct OnboardingView: View {
         OnboardingPage(
             icon:      "bell.badge.fill",
             title:     "Smart Reminders",
-            subtitle:  "FocusFlow nudges you at the right moment, not constantly.",
+            subtitle:  "Martinus nudges you at the right moment, not constantly.",
             detail:    "Personal notifications that feel like a supportive assistant, not noise.",
             gradient:  .ffWarning
         )

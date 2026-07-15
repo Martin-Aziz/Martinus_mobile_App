@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>FocusFlow</string>
+	<string>Martinus</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -23,11 +23,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCalendarsUsageDescription</key>
-	<string>FocusFlow reads your calendar events to show them alongside your tasks in the Today planner.</string>
+	<string>Martinus reads your calendar events to show them alongside your tasks in the Today planner.</string>
 	<key>NSRemindersUsageDescription</key>
-	<string>FocusFlow can create reminders to help you stay on track with your commitments.</string>
+	<string>Martinus can create reminders to help you stay on track with your commitments.</string>
 	<key>NSUserNotificationsUsageDescription</key>
-	<string>FocusFlow sends gentle reminders to help you keep your promises and reach your goals.</string>
+	<string>Martinus sends gentle reminders to help you keep your promises and reach your goals.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

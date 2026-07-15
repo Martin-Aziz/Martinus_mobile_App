@@ -1,4 +1,4 @@
-# FocusFlow
+# Martinus
 
 **Your personal assistant for goals, reflection, and motivation.**
 
@@ -8,7 +8,7 @@ Plan your day. Achieve your goals. Reflect with intention. Stay motivated.
 
 ## The Idea
 
-FocusFlow is a private, native iPhone application that helps busy people reduce mental burden. It remembers commitments, organizes goals, plans the day, surfaces what matters most right now, and helps the user understand personal progress — all without requiring an account, backend, or subscription.
+Martinus is a private, native iPhone application that helps busy people reduce mental burden. It remembers commitments, organizes goals, plans the day, surfaces what matters most right now, and helps the user understand personal progress — all without requiring an account, backend, or subscription.
 
 The application feels calm, intelligent, personal, and supportive. It never feels judgmental, noisy, or stressful.
 

@@ -48,7 +48,7 @@ struct FocusFlowProvider: TimelineProvider {
         let completed   = defaults?.integer(forKey: "widget.completed")  ?? 0
         let streak      = defaults?.integer(forKey: "widget.streak")     ?? 0
         let quoteText   = defaults?.string(forKey: "widget.quoteText")   ?? "Small steps. Big results."
-        let quoteAuthor = defaults?.string(forKey: "widget.quoteAuthor") ?? "FocusFlow"
+        let quoteAuthor = defaults?.string(forKey: "widget.quoteAuthor") ?? "Martinus"
 
         return FocusFlowEntry(
             date:           Date(),
@@ -229,7 +229,7 @@ struct FocusFlowHomeWidget: Widget {
             FocusFlowHomeWidgetEntryView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
         }
-        .configurationDisplayName("FocusFlow")
+        .configurationDisplayName("Martinus")
         .description("See your focus and today's progress at a glance.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
@@ -261,7 +261,7 @@ struct FocusFlowLockScreenWidget: Widget {
             LockScreenWidgetView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
         }
-        .configurationDisplayName("FocusFlow Focus")
+        .configurationDisplayName("Martinus Focus")
         .description("See your main focus on the Lock Screen.")
         .supportedFamilies([.accessoryRectangular])
     }

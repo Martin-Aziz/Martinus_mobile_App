@@ -159,7 +159,7 @@ enum QuotesSeed {
 
         // MARK: Startups
         Quote(text: "Move fast and learn faster.",
-              author: "FocusFlow Guidance",
+              author: "Martinus Guidance",
               category: .startups,
               explanation: "Speed of learning is the most defensible startup advantage. Ship imperfect things, gather real feedback, and iterate relentlessly.",
               isFocusFlow: true),
@@ -316,7 +316,7 @@ enum QuotesSeed {
               source: nil),
 
         Quote(text: "The quality of your life is determined by the quality of your decisions.",
-              author: "FocusFlow Guidance",
+              author: "Martinus Guidance",
               category: .decisions,
               explanation: "Every choice you make — small and large — is authoring the story of your life. Sharpen your decision-making skills as you would any vital tool.",
               isFocusFlow: true),
@@ -391,7 +391,7 @@ enum QuotesSeed {
               source: nil),
 
         Quote(text: "Energy flows where attention goes.",
-              author: "FocusFlow Guidance",
+              author: "Martinus Guidance",
               category: .mindset,
               explanation: "Whatever you consistently focus on expands in your life. Point your attention deliberately toward what you want to grow.",
               isFocusFlow: true),

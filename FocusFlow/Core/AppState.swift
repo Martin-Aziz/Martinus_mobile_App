@@ -6,6 +6,9 @@ import UserNotifications
 @MainActor
 @Observable
 final class AppState {
+    var fontStyle: AppFontStyle = AppFontStyle.saved {
+        didSet { fontStyle.save() }
+    }
     // Navigation
     var selectedTab: AppTab = .home
     var showAddTask      = false
@@ -98,6 +101,29 @@ final class AppState {
         reentryOverdueCount = overdueTasks.count
         reentryAtRiskGoals  = Array(atRisk.prefix(2))
         showReentry         = true
+    }
+}
+
+enum AppFontStyle: String, CaseIterable, Identifiable {
+    case system, rounded, serif, monospaced
+
+    var id: String { rawValue }
+    var title: String { rawValue.capitalized }
+    var design: Font.Design {
+        switch self {
+        case .system: return .default
+        case .rounded: return .rounded
+        case .serif: return .serif
+        case .monospaced: return .monospaced
+        }
+    }
+
+    static var saved: AppFontStyle {
+        AppFontStyle(rawValue: UserDefaults.standard.string(forKey: "martinus.fontStyle") ?? "") ?? .system
+    }
+
+    func save() {
+        UserDefaults.standard.set(rawValue, forKey: "martinus.fontStyle")
     }
 }
 

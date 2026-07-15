@@ -129,7 +129,7 @@ final class NotificationService: ObservableObject {
 
         let morningCategory = UNNotificationCategory(
             identifier: "MORNING_BRIEFING",
-            actions: [UNNotificationAction(identifier: "OPEN", title: "Open FocusFlow", options: .foreground)],
+            actions: [UNNotificationAction(identifier: "OPEN", title: "Open Martinus", options: .foreground)],
             intentIdentifiers: [],
             options: []
         )

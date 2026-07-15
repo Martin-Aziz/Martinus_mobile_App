@@ -1,4 +1,4 @@
-# DECISIONS.md — FocusFlow Architecture & Assumption Log
+# DECISIONS.md — Martinus Architecture & Assumption Log
 
 ## ADR-001: SwiftData over Core Data
 

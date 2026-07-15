@@ -7,6 +7,7 @@ struct MoreView: View {
     @State private var showFocusSession = false
     @State private var showInsights     = false
     @State private var showSettings     = false
+    @State private var showHelp         = false
 
     var body: some View {
         NavigationStack {
@@ -26,6 +27,7 @@ struct MoreView: View {
             .sheet(isPresented: $showFocusSession) { FocusSessionView() }
             .sheet(isPresented: $showInsights)    { InsightsView() }
             .sheet(isPresented: $showSettings)    { SettingsView() }
+            .sheet(isPresented: $showHelp)        { HelpView() }
         }
     }
 
@@ -77,10 +79,9 @@ struct MoreView: View {
         VStack(spacing: Spacing.xs) {
             menuRow(icon: "timer.circle.fill",     label: "Focus Session",    color: .ffPrimary)   { showFocusSession = true }
             menuRow(icon: "chart.bar.fill",        label: "Insights",         color: .ffSecondary) { showInsights = true }
-            menuRow(icon: "bell.badge.fill",       label: "Custom Reminders", color: .ffWarning)   {}
-            menuRow(icon: "music.note",            label: "Focus Music",      color: Color(hex: "#EC4899")) {}
+            menuRow(icon: "bell.badge.fill",       label: "Custom Reminders", color: .ffWarning)   { showSettings = true }
             menuRow(icon: "gearshape.fill",        label: "Settings",         color: .ffNeutral)   { showSettings = true }
-            menuRow(icon: "questionmark.circle",   label: "Help & Feedback",  color: .ffSuccess)   {}
+            menuRow(icon: "questionmark.circle",   label: "Help & Privacy",   color: .ffSuccess)   { showHelp = true }
         }
     }
 
@@ -138,6 +139,9 @@ struct FocusSessionView: View {
             }
             .padding(.horizontal, Spacing.base)
         }
+        .sheet(isPresented: $showSettings) {
+            FocusSessionOptionsView(title: $sessionTitle, minutes: $plannedMinutes)
+        }
     }
 
     // MARK: - Navigation
@@ -189,17 +193,6 @@ struct FocusSessionView: View {
                     }
                 }
             }
-
-            // Music selector
-            HStack(spacing: Spacing.sm) {
-                Image(systemName: "music.note").foregroundColor(.ffTextSecondary)
-                Text("Select Music").font(.ffBodyMed).foregroundColor(.ffTextPrimary)
-                Spacer()
-                Text("Lo-Fi Focus").font(.ffBody).foregroundColor(.ffTextSecondary)
-                Image(systemName: "play.fill").foregroundColor(.ffPrimary)
-            }
-            .padding(Spacing.base)
-            .glassCard()
 
             // Start button
             Button(action: startSession) {
@@ -282,6 +275,29 @@ struct FocusSessionView: View {
 
     private func formatTime(_ totalSeconds: Int) -> String {
         String(format: "%02d:%02d", totalSeconds / 60, totalSeconds % 60)
+    }
+}
+
+private struct FocusSessionOptionsView: View {
+    @Binding var title: String
+    @Binding var minutes: Int
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("Session") {
+                    TextField("Session name", text: $title)
+                    Stepper("Duration: \(minutes) minutes", value: $minutes, in: 5...180, step: 5)
+                }
+                Section {
+                    Text("The timer works fully offline. Martinus does not stream or track focus audio.")
+                        .foregroundColor(.secondary)
+                }
+            }
+            .navigationTitle("Focus Options")
+            .toolbar { Button("Done") { dismiss() } }
+        }
     }
 }
 
@@ -415,6 +431,7 @@ struct SettingsView: View {
     @State private var eveningHour        = 21
     @State private var morningEnabled     = true
     @State private var eveningEnabled     = true
+    @State private var fontStyle          = AppFontStyle.system
 
     var body: some View {
         NavigationStack {
@@ -422,6 +439,7 @@ struct SettingsView: View {
                 Color.ffBackground.ignoresSafeArea()
                 List {
                     profileSection
+                    appearanceSection
                     notificationsSection
                     aboutSection
                 }
@@ -440,6 +458,20 @@ struct SettingsView: View {
             }
             .onAppear { loadSettings() }
         }
+    }
+
+    private var appearanceSection: some View {
+        Section("Appearance") {
+            Picker("Font", selection: $fontStyle) {
+                ForEach(AppFontStyle.allCases) { style in
+                    Text(style.title).tag(style)
+                }
+            }
+            Text("Choose System, Rounded, Serif, or Monospaced. The selection stays on this device.")
+                .font(.caption)
+                .foregroundColor(.ffTextSecondary)
+        }
+        .listRowBackground(Color.ffSurfaceElevated)
     }
 
     private var profileSection: some View {
@@ -483,6 +515,11 @@ struct SettingsView: View {
                 Spacer()
                 Text("100").foregroundColor(.ffTextSecondary)
             }
+            HStack {
+                Text("Storage")
+                Spacer()
+                Text("On this device").foregroundColor(.ffTextSecondary)
+            }
         }
         .listRowBackground(Color.ffSurfaceElevated)
     }
@@ -493,6 +530,7 @@ struct SettingsView: View {
         eveningHour    = appState.userProfile?.eveningReviewHour ?? 21
         morningEnabled = appState.userProfile?.morningReminderEnabled ?? true
         eveningEnabled = appState.userProfile?.eveningReviewEnabled ?? true
+        fontStyle      = appState.fontStyle
     }
 
     private func saveSettings() {
@@ -501,12 +539,44 @@ struct SettingsView: View {
         appState.userProfile?.eveningReviewHour      = eveningHour
         appState.userProfile?.morningReminderEnabled = morningEnabled
         appState.userProfile?.eveningReviewEnabled   = eveningEnabled
+        appState.fontStyle                            = fontStyle
+        try? appState.profileRepo.save()
 
         if morningEnabled {
             Task { await NotificationService.shared.scheduleMorningBriefing(hour: morningHour, minute: 0) }
+        } else {
+            NotificationService.shared.removeNotifications(withPrefix: "morning-briefing")
         }
         if eveningEnabled {
             Task { await NotificationService.shared.scheduleEveningReview(hour: eveningHour, minute: 0) }
+        } else {
+            NotificationService.shared.removeNotifications(withPrefix: "evening-review")
+        }
+    }
+}
+
+private struct HelpView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Section("Martinus") {
+                    Label("Plan tasks in Today", systemImage: "calendar")
+                    Label("Track goals and milestones", systemImage: "target")
+                    Label("Write private journal entries", systemImage: "book.fill")
+                    Label("Save favorite quotes", systemImage: "quote.bubble.fill")
+                    Label("Run offline focus sessions", systemImage: "timer")
+                }
+                Section("Privacy") {
+                    Text("No account is required. Your tasks, goals, journal, and preferences remain locally on this device. Martinus has no backend, advertising, analytics upload, or subscription.")
+                }
+                Section("Permissions") {
+                    Text("Calendar access is read-only and optional. Notifications are optional and can be changed in iPhone Settings at any time.")
+                }
+            }
+            .navigationTitle("Help & Privacy")
+            .toolbar { Button("Done") { dismiss() } }
         }
     }
 }

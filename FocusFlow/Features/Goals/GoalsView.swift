@@ -150,7 +150,7 @@ struct GoalsView: View {
         EmptyStateView(
             icon:        "target",
             title:       "No goals yet",
-            subtitle:    "Set a meaningful goal and let FocusFlow help you reach it.",
+            subtitle:    "Set a meaningful goal and let Martinus help you reach it.",
             actionLabel: "Add First Goal",
             onAction:    { showAdd = true }
         )

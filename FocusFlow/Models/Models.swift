@@ -439,7 +439,7 @@ final class JournalEntry {
 final class Quote {
     var id:          UUID
     var text:        String
-    var author:      String        // empty string = FocusFlow Guidance
+    var author:      String        // empty string = Martinus Guidance
     var source:      String?       // book title, speech, etc.
     var category:    QuoteCategory
     var explanation: String        // simple language explanation
@@ -467,7 +467,7 @@ final class Quote {
     }
 
     var displayAuthor: String {
-        isFocusFlow ? "FocusFlow Guidance" : author
+        isFocusFlow ? "Martinus Guidance" : author
     }
 }
 

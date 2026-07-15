@@ -168,7 +168,7 @@ struct ReentryView: View {
                     .multilineTextAlignment(.center)
             }
 
-            FFButton("Open FocusFlow", icon: "arrow.right") {
+            FFButton("Open Martinus", icon: "arrow.right") {
                 onComplete()
                 dismiss()
             }

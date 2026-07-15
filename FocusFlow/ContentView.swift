@@ -2,14 +2,15 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(AppState.self) private var appState
-    @State private var selectedTab: AppTab = .home
-
     var body: some View {
         ZStack {
             // System background — deep dark from design
             Color.ffBackground.ignoresSafeArea()
 
-            TabView(selection: $selectedTab) {
+            TabView(selection: Binding(
+                get: { appState.selectedTab },
+                set: { appState.selectedTab = $0 }
+            )) {
                 HomeView()
                     .tabItem { Label("Home",    systemImage: "house.fill") }
                     .tag(AppTab.home)
@@ -40,6 +41,7 @@ struct ContentView: View {
             }
         }
         .preferredColorScheme(.dark)
+        .id(appState.fontStyle.rawValue)
         .fullScreenCover(isPresented: Binding(
             get: { appState.showOnboarding },
             set: { appState.showOnboarding = $0 }

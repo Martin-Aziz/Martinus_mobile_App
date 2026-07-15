@@ -36,6 +36,7 @@
 		AA000061 /* AssistantServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000161 /* AssistantServiceTests.swift */; };
 		AA000062 /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000162 /* ModelTests.swift */; };
 		AA000063 /* ViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000163 /* ViewModelTests.swift */; };
+		AA000070 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000170 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,7 @@
 		AA000163 /* ViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTests.swift; sourceTree = "<group>"; };
 		AA000200 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA000201 /* WidgetInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = WidgetInfo.plist; sourceTree = "<group>"; };
+		AA000170 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -100,6 +102,7 @@
 				AA000102,
 				AA000103,
 				AA000200,
+				AA000170,
 				AACOREGROUP,
 				AAMODELS,
 				AAREPOS,
@@ -319,7 +322,7 @@
 		AABUILD_APP_RESOURCES = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
-			files = ();
+			files = (AA000070 /* Assets.xcassets in Resources */);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
