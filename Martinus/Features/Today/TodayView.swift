@@ -13,6 +13,8 @@ final class TodayViewModel {
     var isLoaded         = false
     var showAddTask      = false
     var showEndOfDay     = false
+    var showCalendar     = false
+    var motivationMoment: MotivationMoment?
 
     private var taskRepo: TaskRepository?
     private var goalRepo: GoalRepository?
@@ -39,6 +41,7 @@ final class TodayViewModel {
     func markComplete(_ task: FocusTask) {
         taskRepo?.markComplete(task)
         AnalyticsService.shared.record(EventName.taskCompleted)
+        motivationMoment = AssistantService.motivation(for: .taskCompleted, taskTitle: task.title)
         HapticManager.success()
         Task { await loadItems(for: selectedDate) }
     }
@@ -55,6 +58,10 @@ final class TodayViewModel {
         AnalyticsService.shared.record(EventName.taskArchived)
         try? taskRepo?.save()
         HapticManager.medium()
+        Task { await loadItems(for: selectedDate) }
+    }
+
+    func reloadSelectedDate() {
         Task { await loadItems(for: selectedDate) }
     }
 
@@ -105,7 +112,7 @@ struct TodayView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.ffBackground.ignoresSafeArea()
+                CinematicBackgroundView(variant: 1)
 
                 VStack(spacing: 0) {
                     headerSection
@@ -135,6 +142,12 @@ struct TodayView: View {
             .task { await viewModel.load(taskRepo: appState.taskRepo, goalRepo: appState.goalRepo) }
             .sheet(isPresented: $viewModel.showAddTask) { AddTaskView() }
             .sheet(isPresented: $viewModel.showEndOfDay) { EndOfDayView(viewModel: viewModel) }
+            .sheet(isPresented: $viewModel.showCalendar, onDismiss: { viewModel.reloadSelectedDate() }) {
+                CalendarHubView(initialDate: viewModel.selectedDate)
+            }
+            .sheet(item: $viewModel.motivationMoment) { moment in
+                MotivationMomentView(moment: moment)
+            }
         }
     }
 
@@ -158,6 +171,7 @@ struct TodayView: View {
                     .font(.ffBodyMed)
                     .foregroundColor(.ffPrimary)
                 }
+                CircularIconButton("calendar", color: .ffSecondary, action: { viewModel.showCalendar = true })
                 CircularIconButton("plus", action: { viewModel.showAddTask = true })
             }
         }
@@ -386,6 +400,10 @@ struct TimelineTaskRow: View {
                         goalHealthPill(for: goal)
                     }
                 }
+                if let deadline = task.dueDate ?? task.scheduledTime ?? task.scheduledDate,
+                   !task.isCompleted {
+                    CompactCountdownLabel(target: deadline, prefix: task.type == .event ? "Event" : nil)
+                }
             }
 
             Spacer()
@@ -477,15 +495,15 @@ struct CalendarEventRow: View {
 
 // MARK: - TaskDetailView
 struct TaskDetailView: View {
-    var task:      FocusTask
+    @Bindable var task: FocusTask
     var viewModel: TodayViewModel
     @Environment(\.dismiss) private var dismiss
-    @State private var showReschedule = false
+    @State private var showEditTask = false
 
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.ffBackground.ignoresSafeArea()
+                CinematicBackgroundView(variant: 1)
                 ScrollView {
                     VStack(alignment: .leading, spacing: Spacing.xl) {
                         HStack {
@@ -504,13 +522,8 @@ struct TaskDetailView: View {
                                 .foregroundColor(.ffTextSecondary)
                         }
 
-                        if let due = task.dueDate {
-                            HStack {
-                                Image(systemName: "calendar")
-                                Text(due.relativeString)
-                            }
-                            .font(.ffBody)
-                            .foregroundColor(due.isPast ? .ffDanger : .ffTextSecondary)
+                        if let deadline = task.dueDate ?? task.scheduledTime ?? task.scheduledDate {
+                            TaskCountdownView(target: deadline, isEvent: task.type == .event)
                         }
 
                         if task.isPromise, let statement = task.originalStatement {
@@ -535,7 +548,7 @@ struct TaskDetailView: View {
                                     dismiss()
                                 }
                                 FFButton("Reschedule", style: .secondary, icon: "calendar.badge.clock") {
-                                    showReschedule = true
+                                    showEditTask = true
                                 }
                             }
                         }
@@ -546,13 +559,335 @@ struct TaskDetailView: View {
             .navigationTitle("Task")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Edit") { showEditTask = true }
+                        .foregroundColor(.ffPrimary)
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Done") { dismiss() }
                         .foregroundColor(.ffPrimary)
                 }
             }
+            .sheet(isPresented: $showEditTask) {
+                AddTaskView(task: task) {
+                    viewModel.reloadSelectedDate()
+                }
+            }
         }
     }
+}
+
+struct TaskCountdownView: View {
+    let target: Date
+    let isEvent: Bool
+
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 1)) { context in
+            let remaining = max(0, target.timeIntervalSince(context.date))
+            let days = Int(remaining) / 86_400
+            let hours = (Int(remaining) % 86_400) / 3_600
+            let minutes = (Int(remaining) % 3_600) / 60
+            let seconds = Int(remaining) % 60
+
+            VStack(alignment: .leading, spacing: Spacing.md) {
+                HStack {
+                    Image(systemName: isEvent ? "calendar.badge.clock" : "hourglass")
+                        .foregroundColor(target < context.date ? .ffDanger : .ffWarning)
+                    Text(target < context.date ? "Date passed" : isEvent ? "Important date countdown" : "Time remaining")
+                        .font(.ffHeadline3)
+                        .foregroundColor(.ffTextPrimary)
+                    Spacer()
+                }
+                if target >= context.date {
+                    HStack(spacing: Spacing.sm) {
+                        countdownUnit(days, "days")
+                        countdownUnit(hours, "hours")
+                        countdownUnit(minutes, "min")
+                        countdownUnit(seconds, "sec")
+                    }
+                }
+                Text(target.formatted(date: .abbreviated, time: .shortened))
+                    .font(.ffCaption)
+                    .foregroundColor(.ffTextSecondary)
+            }
+            .padding(Spacing.base)
+            .glassCard(cornerRadius: Radius.md)
+        }
+    }
+
+    private func countdownUnit(_ value: Int, _ label: String) -> some View {
+        VStack(spacing: 2) {
+            Text(String(format: "%02d", value))
+                .font(.ffHeadline2)
+                .foregroundStyle(LinearGradient.ffBrand)
+            Text(label).font(.ffCaption2).foregroundColor(.ffTextSecondary)
+        }
+        .frame(maxWidth: .infinity)
+    }
+}
+
+// MARK: - Calendar Hub
+private enum CalendarCreateKind: String, Identifiable {
+    case task, event, journal, goal
+    var id: String { rawValue }
+}
+
+struct CalendarHubView: View {
+    @Environment(AppState.self) private var appState
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var selectedDate: Date
+    @State private var displayedMonth: Date
+    @State private var tasks: [FocusTask] = []
+    @State private var goals: [Goal] = []
+    @State private var journals: [JournalEntry] = []
+    @State private var systemEvents: [CalendarEvent] = []
+    @State private var createKind: CalendarCreateKind?
+
+    init(initialDate: Date = Date()) {
+        _selectedDate = State(initialValue: initialDate)
+        _displayedMonth = State(initialValue: initialDate)
+    }
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                CinematicBackgroundView(variant: 1)
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: Spacing.xl) {
+                        monthHeader
+                        weekdayHeader
+                        monthGrid
+                        quickCreate
+                        agenda
+                    }
+                    .padding(.horizontal, Spacing.base)
+                    .padding(.bottom, Spacing.xxl)
+                }
+            }
+            .navigationTitle("Calendar")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Today") { moveToToday() }.foregroundColor(.ffPrimary)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") { dismiss() }.foregroundColor(.ffPrimary)
+                }
+            }
+            .task { await reload() }
+            .onChange(of: selectedDate) { _, _ in Task { await loadSystemEvents() } }
+            .sheet(item: $createKind, onDismiss: { Task { await reload() } }) { kind in
+                switch kind {
+                case .task:
+                    AddTaskView(initialDate: selectedDate)
+                case .event:
+                    AddTaskView(initialDate: defaultEventDate, initialType: .event)
+                case .journal:
+                    AddJournalEntryView(date: selectedDate)
+                case .goal:
+                    AddGoalView(targetDate: selectedDate.endOfDay)
+                }
+            }
+        }
+    }
+
+    private var monthHeader: some View {
+        HStack {
+            Button { changeMonth(-1) } label: {
+                Image(systemName: "chevron.left").frame(width: 40, height: 40)
+            }
+            Spacer()
+            Text(displayedMonth.formatted(.dateTime.month(.wide).year()))
+                .font(.ffHeadline2)
+                .foregroundColor(.ffTextPrimary)
+            Spacer()
+            Button { changeMonth(1) } label: {
+                Image(systemName: "chevron.right").frame(width: 40, height: 40)
+            }
+        }
+        .foregroundColor(.ffPrimary)
+        .padding(.top, Spacing.base)
+    }
+
+    private var weekdayHeader: some View {
+        let symbols = Calendar.current.veryShortStandaloneWeekdaySymbols
+        let startIndex = Calendar.current.firstWeekday - 1
+        let shifted = Array(symbols[startIndex...] + symbols[..<startIndex])
+        return HStack(spacing: 0) {
+            ForEach(shifted, id: \.self) { symbol in
+                Text(symbol.uppercased())
+                    .font(.ffCaption2)
+                    .foregroundColor(.ffTextTertiary)
+                    .frame(maxWidth: .infinity)
+            }
+        }
+    }
+
+    private var monthGrid: some View {
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 5), count: 7), spacing: 7) {
+            ForEach(monthCells, id: \.self) { date in
+                Button {
+                    selectedDate = date
+                    HapticManager.selection()
+                } label: {
+                    VStack(spacing: 3) {
+                        Text(date.dayNumber)
+                            .font(.system(size: 15, weight: date.isToday || date.isSameDay(as: selectedDate) ? .bold : .regular))
+                        HStack(spacing: 2) {
+                            if hasTask(on: date) { dot(.ffPrimary) }
+                            if hasJournal(on: date) { dot(.ffSuccess) }
+                            if hasGoal(on: date) { dot(.ffWarning) }
+                        }
+                        .frame(height: 4)
+                    }
+                    .foregroundColor(date.isSameDay(as: selectedDate) ? .white : isInDisplayedMonth(date) ? .ffTextPrimary : .ffTextTertiary)
+                    .frame(maxWidth: .infinity, minHeight: 46)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(date.isSameDay(as: selectedDate) ? AnyShapeStyle(LinearGradient.ffBrand) : AnyShapeStyle(date.isToday ? Color.ffPrimary.opacity(0.14) : Color.clear))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(date.isToday && !date.isSameDay(as: selectedDate) ? Color.ffPrimary : Color.clear, lineWidth: 1)
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(Spacing.sm)
+        .glassCard(cornerRadius: Radius.lg)
+    }
+
+    private var quickCreate: some View {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
+            SectionHeader(title: "Create for \(selectedDate.formatted(date: .abbreviated, time: .omitted))")
+            HStack(spacing: Spacing.sm) {
+                createButton(.task, "Task", "checkmark.circle.fill", .ffPrimary)
+                createButton(.event, "Event", "calendar.badge.plus", .ffSecondary)
+                createButton(.journal, "Journal", "book.fill", .ffSuccess)
+                createButton(.goal, "Goal", "target", .ffWarning)
+            }
+        }
+    }
+
+    private var agenda: some View {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
+            SectionHeader(title: "Day Overview")
+            let items = agendaItems
+            if items.isEmpty {
+                GlassCard {
+                    HStack(spacing: Spacing.md) {
+                        Image(systemName: "calendar.badge.plus").foregroundColor(.ffPrimary)
+                        Text("Nothing planned yet. Add anything above.")
+                            .font(.ffBody).foregroundColor(.ffTextSecondary)
+                        Spacer()
+                    }
+                }
+            } else {
+                ForEach(items) { item in
+                    HStack(spacing: Spacing.md) {
+                        Image(systemName: item.icon)
+                            .foregroundColor(item.color)
+                            .frame(width: 30, height: 30)
+                            .background(item.color.opacity(0.14))
+                            .clipShape(Circle())
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(item.title).font(.ffBodyMed).foregroundColor(.ffTextPrimary)
+                            Text(item.subtitle).font(.ffCaption).foregroundColor(.ffTextSecondary)
+                        }
+                        Spacer()
+                    }
+                    .padding(Spacing.base)
+                    .background(Color.ffSurfaceElevated.opacity(0.6))
+                    .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
+                }
+            }
+        }
+    }
+
+    private func createButton(_ kind: CalendarCreateKind, _ label: String, _ icon: String, _ color: Color) -> some View {
+        Button { createKind = kind } label: {
+            VStack(spacing: 6) {
+                Image(systemName: icon).font(.system(size: 19, weight: .semibold))
+                Text(label).font(.ffCaption2)
+            }
+            .foregroundColor(color)
+            .frame(maxWidth: .infinity, minHeight: 64)
+            .background(color.opacity(0.12))
+            .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func dot(_ color: Color) -> some View {
+        Circle().fill(color).frame(width: 4, height: 4)
+    }
+
+    private var monthCells: [Date] {
+        let calendar = Calendar.current
+        let interval = calendar.dateInterval(of: .month, for: displayedMonth)!
+        let first = interval.start
+        let weekday = calendar.component(.weekday, from: first)
+        let leading = (weekday - calendar.firstWeekday + 7) % 7
+        let gridStart = calendar.date(byAdding: .day, value: -leading, to: first)!
+        return (0..<42).compactMap { calendar.date(byAdding: .day, value: $0, to: gridStart) }
+    }
+
+    private var defaultEventDate: Date {
+        Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: selectedDate) ?? selectedDate
+    }
+
+    private func isInDisplayedMonth(_ date: Date) -> Bool {
+        Calendar.current.isDate(date, equalTo: displayedMonth, toGranularity: .month)
+    }
+
+    private func hasTask(on date: Date) -> Bool {
+        tasks.contains { ($0.scheduledDate ?? $0.dueDate)?.isSameDay(as: date) == true }
+    }
+
+    private func hasJournal(on date: Date) -> Bool { journals.contains { $0.date.isSameDay(as: date) } }
+    private func hasGoal(on date: Date) -> Bool { goals.contains { $0.targetDate?.isSameDay(as: date) == true } }
+
+    private func changeMonth(_ offset: Int) {
+        displayedMonth = Calendar.current.date(byAdding: .month, value: offset, to: displayedMonth) ?? displayedMonth
+    }
+
+    private func moveToToday() {
+        selectedDate = Date()
+        displayedMonth = Date()
+    }
+
+    @MainActor
+    private func reload() async {
+        tasks = (try? appState.taskRepo.fetchAll()) ?? []
+        goals = (try? appState.goalRepo.fetchAll()) ?? []
+        journals = (try? appState.journalRepo.fetchAll()) ?? []
+        await loadSystemEvents()
+    }
+
+    @MainActor
+    private func loadSystemEvents() async {
+        systemEvents = await CalendarService.shared.loadEvents(for: selectedDate)
+    }
+
+    private var agendaItems: [CalendarAgendaItem] {
+        let taskItems = tasks.filter { ($0.scheduledDate ?? $0.dueDate)?.isSameDay(as: selectedDate) == true }.map {
+            CalendarAgendaItem(title: $0.title, subtitle: $0.type == .event ? "Event" : "Task", icon: $0.type == .event ? "calendar" : "checkmark.circle", color: $0.type == .event ? .ffSecondary : .ffPrimary)
+        }
+        let eventItems = systemEvents.map { CalendarAgendaItem(title: $0.title, subtitle: $0.startDate.formatted(date: .omitted, time: .shortened), icon: "calendar", color: .ffSecondary) }
+        let journalItems = journals.filter { $0.date.isSameDay(as: selectedDate) }.map { CalendarAgendaItem(title: $0.body.isBlank ? "Journal entry" : $0.body, subtitle: $0.mood.emoji + " Journal", icon: "book.fill", color: .ffSuccess) }
+        let goalItems = goals.filter { $0.targetDate?.isSameDay(as: selectedDate) == true }.map { CalendarAgendaItem(title: $0.title, subtitle: "Goal deadline", icon: "target", color: .ffWarning) }
+        return taskItems + eventItems + journalItems + goalItems
+    }
+}
+
+private struct CalendarAgendaItem: Identifiable {
+    let id = UUID()
+    let title: String
+    let subtitle: String
+    let icon: String
+    let color: Color
 }
 
 // MARK: - EndOfDayView
@@ -567,7 +902,7 @@ struct EndOfDayView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.ffBackground.ignoresSafeArea()
+                CinematicBackgroundView(variant: 1)
                 ScrollView {
                     VStack(spacing: Spacing.xl) {
                         VStack(spacing: Spacing.sm) {

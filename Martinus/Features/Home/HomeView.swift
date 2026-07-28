@@ -9,33 +9,41 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.ffBackground.ignoresSafeArea()
+                CinematicBackgroundView(variant: 0)
                 backgroundBlobs
 
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: Spacing.xl) {
                         greetingSection
-                        if let focus = viewModel.mainFocus {
-                            TodayFocusCard(task: focus, onStart: {
-                                appState.showFocusSession = true
-                            }, onChangeFocus: {
-                                viewModel.showChangeFocus = true
-                            })
-                        } else {
-                            EmptyFocusCard { appState.showAddTask = true }
-                        }
-                        if let insight = viewModel.insight {
-                            AssistantCard(insight: insight) { action in
-                                handleInsightAction(action, insight: insight)
+                        if viewModel.isLoaded {
+                            if let focus = viewModel.mainFocus {
+                                TodayFocusCard(
+                                    task: focus,
+                                    progress: viewModel.focusProgress(for: focus),
+                                    onChangeFocus: { viewModel.showChangeFocus = true }
+                                )
+                            } else {
+                                EmptyFocusCard { appState.showAddTask = true }
                             }
+                            if let insight = viewModel.insight {
+                                AssistantCard(insight: insight) { action in
+                                    handleInsightAction(action, insight: insight)
+                                }
+                            }
+                            upcomingSection
+                            if let quote = viewModel.dailyQuote {
+                                DailyMotivationCard(quote: quote, onFavorite: {
+                                    appState.quoteRepo.toggleFavorite(quote)
+                                })
+                            }
+                            quickActionsSection
+                        } else {
+                            ProgressView()
+                                .tint(.ffPrimary)
+                                .frame(maxWidth: .infinity)
+                                .padding(Spacing.xxl)
+                                .glassCard(cornerRadius: Radius.lg)
                         }
-                        upcomingSection
-                        if let quote = viewModel.dailyQuote {
-                            DailyMotivationCard(quote: quote, onFavorite: {
-                                appState.quoteRepo.toggleFavorite(quote)
-                            })
-                        }
-                        quickActionsSection
                     }
                     .padding(.horizontal, Spacing.base)
                     .padding(.bottom, 100)
@@ -51,6 +59,24 @@ struct HomeView: View {
                 )
             }
             .refreshable { await viewModel.refresh() }
+            .sheet(item: $viewModel.motivationMoment) { moment in
+                MotivationMomentView(moment: moment)
+            }
+            .confirmationDialog(
+                "Change Today's Focus",
+                isPresented: $viewModel.showChangeFocus,
+                titleVisibility: .visible
+            ) {
+                ForEach(viewModel.focusCandidates) { task in
+                    Button(task.title) { viewModel.setMainFocus(task) }
+                }
+                Button("Cancel", role: .cancel) {}
+            }
+            .onChange(of: viewModel.showAllUpcoming) { _, shouldShow in
+                guard shouldShow else { return }
+                viewModel.showAllUpcoming = false
+                appState.selectedTab = .today
+            }
         }
     }
 
@@ -71,12 +97,7 @@ struct HomeView: View {
                 NavigationLink {
                     InsightsView()
                 } label: {
-                    Image(systemName: "chart.bar.fill")
-                        .font(.system(size: 18))
-                        .foregroundColor(.ffTextSecondary)
-                        .frame(width: 40, height: 40)
-                        .background(Color.ffSurfaceElevated)
-                        .clipShape(Circle())
+                    UserAvatarView(profile: appState.userProfile, size: 54)
                 }
             }
         }
@@ -92,10 +113,13 @@ struct HomeView: View {
             )
             if viewModel.upcomingItems.isEmpty {
                 Text("Nothing scheduled for today.")
-                    .font(.ffBody)
-                    .foregroundColor(.ffTextTertiary)
+                    .font(.ffHeadline3)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.ffTextPrimary)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.vertical, Spacing.sm)
+                    .padding(Spacing.base)
+                    .background(Color.ffSurfaceElevated.opacity(0.72))
+                    .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
             } else {
                 VStack(spacing: Spacing.xs) {
                     ForEach(viewModel.upcomingItems) { task in
@@ -116,8 +140,8 @@ struct HomeView: View {
                 QuickActionButton(icon: "target",             label: "New Goal",   color: .ffSecondary) { appState.showAddGoal = true }
                 QuickActionButton(icon: "book.fill",          label: "Journal",    color: .ffSuccess)   { appState.selectedTab = .journal }
                 QuickActionButton(icon: "timer",              label: "Focus",      color: .ffWarning)   { appState.showFocusSession = true }
-                QuickActionButton(icon: "bell.fill",          label: "Reminder",   color: Color(hex: "#EC4899")) { appState.showAddTask = true }
-                QuickActionButton(icon: "text.bubble.fill",   label: "Promise",    color: Color(hex: "#F97316")) {
+                QuickActionButton(icon: "bell.fill",          label: "Reminder",   color: .ffPrimary) { appState.showAddTask = true }
+                QuickActionButton(icon: "text.bubble.fill",   label: "Promise",    color: .ffPrimary) {
                     appState.showAddTask = true
                 }
             }
@@ -161,7 +185,7 @@ struct HomeView: View {
 // MARK: - TodayFocusCard
 struct TodayFocusCard: View {
     var task:            FocusTask
-    var onStart:         () -> Void
+    var progress:        Double
     var onChangeFocus:   () -> Void
 
     var body: some View {
@@ -178,13 +202,13 @@ struct TodayFocusCard: View {
                         .foregroundColor(.ffTextPrimary)
                 }
                 Spacer()
-                ProgressRing(progress: 0, size: 56)
+                ProgressRing(progress: progress, size: 56)
             }
 
             HStack(spacing: Spacing.sm) {
                 PriorityBadge(task.priority)
-                if let due = task.dueDate {
-                    TagChip(due.relativeString, color: due.isPast ? .ffDanger : .ffTextSecondary)
+                if let deadline = task.dueDate ?? task.scheduledTime ?? task.scheduledDate {
+                    CompactCountdownLabel(target: deadline)
                 }
             }
 
@@ -195,32 +219,10 @@ struct TodayFocusCard: View {
                     .lineLimit(2)
             }
 
-            HStack(spacing: Spacing.sm) {
-                FFButton("Start Now", icon: "play.fill", action: onStart)
-                Button(action: onChangeFocus) {
-                    Image(systemName: "arrow.triangle.2.circlepath")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.ffTextSecondary)
-                        .frame(width: 44, height: 44)
-                        .background(Color.ffSurfaceElevated)
-                        .clipShape(RoundedRectangle(cornerRadius: Radius.xs))
-                }
-            }
+            FFButton("Change Today's Focus", style: .secondary, icon: "arrow.triangle.2.circlepath", action: onChangeFocus)
         }
         .padding(Spacing.base)
-        .background(
-            RoundedRectangle(cornerRadius: Radius.lg)
-                .fill(.ultraThinMaterial)
-                .overlay(
-                    RoundedRectangle(cornerRadius: Radius.lg)
-                        .fill(LinearGradient.ffBrand.opacity(0.08))
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: Radius.lg)
-                        .strokeBorder(LinearGradient.ffBrand.opacity(0.35), lineWidth: 1)
-                )
-        )
-        .shadow(color: Color.ffPrimary.opacity(0.15), radius: 20, x: 0, y: 8)
+        .glassCard(cornerRadius: Radius.lg)
     }
 }
 
@@ -313,6 +315,10 @@ struct UpcomingTaskRow: View {
                     Text(time.timeString)
                         .font(.ffCaption)
                         .foregroundColor(.ffTextSecondary)
+                }
+                if let deadline = task.dueDate ?? task.scheduledTime ?? task.scheduledDate,
+                   !task.isCompleted {
+                    CompactCountdownLabel(target: deadline)
                 }
             }
 

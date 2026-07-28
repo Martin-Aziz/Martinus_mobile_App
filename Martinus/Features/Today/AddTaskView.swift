@@ -7,6 +7,9 @@ struct AddTaskView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
+    private let taskToEdit: FocusTask?
+    private let onSave: (() -> Void)?
+
     @State private var title        = ""
     @State private var notes        = ""
     @State private var type         = TaskType.task
@@ -21,10 +24,30 @@ struct AddTaskView: View {
     @State private var dueDate      = Date()
     @State private var isRecurring  = false
 
+    init(task: FocusTask? = nil, initialDate: Date? = nil, initialType: TaskType = .task, onSave: (() -> Void)? = nil) {
+        self.taskToEdit = task
+        self.onSave = onSave
+        let seedDate = initialDate ?? Date()
+        let seedType = task?.type ?? initialType
+        _title = State(initialValue: task?.title ?? "")
+        _notes = State(initialValue: task?.notes ?? "")
+        _type = State(initialValue: seedType)
+        _priority = State(initialValue: task?.priority ?? .medium)
+        _isPromise = State(initialValue: task?.isPromise ?? (seedType == .promise))
+        _promisedTo = State(initialValue: task?.promisedTo ?? "")
+        _hasDate = State(initialValue: task?.scheduledDate != nil || initialDate != nil)
+        _scheduledDate = State(initialValue: task?.scheduledDate ?? seedDate)
+        _hasTime = State(initialValue: task?.scheduledTime != nil || seedType == .event)
+        _scheduledTime = State(initialValue: task?.scheduledTime ?? seedDate)
+        _hasDueDate = State(initialValue: task?.dueDate != nil || seedType == .event)
+        _dueDate = State(initialValue: task?.dueDate ?? seedDate)
+        _isRecurring = State(initialValue: task?.isRecurring ?? false)
+    }
+
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.ffBackground.ignoresSafeArea()
+                CinematicBackgroundView(variant: 1)
                 ScrollView {
                     VStack(spacing: Spacing.xl) {
                         titleSection
@@ -40,7 +63,7 @@ struct AddTaskView: View {
                     .padding(.bottom, Spacing.xxl)
                 }
             }
-            .navigationTitle(isPromise ? "Record a Promise" : "New Task")
+            .navigationTitle(taskToEdit == nil ? (isPromise ? "Record a Promise" : type == .event ? "New Important Date" : "New Task") : "Edit Task")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -69,10 +92,15 @@ struct AddTaskView: View {
             Text("Type").font(.ffCaption).foregroundColor(.ffTextSecondary)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: Spacing.sm) {
-                    ForEach([TaskType.task, .reminder, .habit, .promise], id: \.self) { t in
+                    ForEach([TaskType.task, .event, .reminder, .habit, .promise], id: \.self) { t in
                         TagChip(typeLabel(t), color: typeColor(t), isSelected: type == t) {
                             type      = t
                             isPromise = (t == .promise)
+                            if t == .event {
+                                hasDate = true
+                                hasDueDate = true
+                                hasTime = true
+                            }
                         }
                     }
                 }
@@ -132,7 +160,6 @@ struct AddTaskView: View {
                     DatePicker("", selection: $scheduledDate, displayedComponents: .date)
                         .datePickerStyle(.compact)
                         .tint(.ffPrimary)
-                        .colorScheme(.dark)
                         .labelsHidden()
                 }
             }
@@ -152,7 +179,6 @@ struct AddTaskView: View {
                     DatePicker("", selection: $scheduledTime, displayedComponents: .hourAndMinute)
                         .datePickerStyle(.wheel)
                         .tint(.ffPrimary)
-                        .colorScheme(.dark)
                         .labelsHidden()
                         .frame(height: 100)
                         .clipped()
@@ -164,15 +190,14 @@ struct AddTaskView: View {
             Toggle(isOn: $hasDueDate) {
                 HStack(spacing: Spacing.sm) {
                     Image(systemName: "flag.fill").foregroundColor(.ffDanger)
-                    Text("Due Date").font(.ffBodyMed).foregroundColor(.ffTextPrimary)
+                    Text(type == .event ? "Event Date & Time" : "Due Date").font(.ffBodyMed).foregroundColor(.ffTextPrimary)
                 }
             }
             .tint(.ffPrimary)
             if hasDueDate {
-                DatePicker("", selection: $dueDate, displayedComponents: .date)
+                DatePicker("", selection: $dueDate, displayedComponents: type == .event ? [.date, .hourAndMinute] : .date)
                     .datePickerStyle(.compact)
                     .tint(.ffPrimary)
-                    .colorScheme(.dark)
                     .labelsHidden()
             }
         }
@@ -188,7 +213,7 @@ struct AddTaskView: View {
     }
 
     private var saveButton: some View {
-        FFButton(isPromise ? "Record Promise" : "Create Task", icon: isPromise ? "hand.raised.fill" : "plus.circle.fill") {
+        FFButton(taskToEdit == nil ? (isPromise ? "Record Promise" : type == .event ? "Add Important Date" : "Create Task") : "Save Changes", icon: taskToEdit == nil ? (isPromise ? "hand.raised.fill" : type == .event ? "calendar.badge.plus" : "plus.circle.fill") : "checkmark.circle.fill") {
             saveTask()
         }
         .disabled(title.isBlank)
@@ -198,20 +223,38 @@ struct AddTaskView: View {
     // MARK: - Save
 
     private func saveTask() {
-        let task = FocusTask(
-            title:             title,
-            type:              type,
-            priority:          priority,
-            scheduledDate:     hasDate    ? scheduledDate : nil,
-            scheduledTime:     hasTime    ? scheduledTime : nil,
-            dueDate:           hasDueDate ? dueDate       : nil,
-            isPromise:         isPromise,
-            promisedTo:        promisedTo.isBlank ? nil : promisedTo,
-            originalStatement: isPromise ? title : nil,
-            notes:             notes
-        )
-
-        appState.taskRepo.insert(task)
+        let eventDate = type == .event ? dueDate : nil
+        let task: FocusTask
+        if let existing = taskToEdit {
+            task = existing
+            task.title = title.trimmed
+            task.notes = notes
+            task.type = type
+            task.priority = priority
+            task.scheduledDate = type == .event ? eventDate : (hasDate ? scheduledDate : nil)
+            task.scheduledTime = type == .event ? eventDate : (hasTime ? combinedDateAndTime : nil)
+            task.dueDate = hasDueDate ? dueDate : nil
+            task.isPromise = isPromise
+            task.promisedTo = promisedTo.isBlank ? nil : promisedTo.trimmed
+            task.originalStatement = isPromise ? title.trimmed : nil
+            task.isRecurring = isRecurring
+            task.updatedAt = Date()
+        } else {
+            task = FocusTask(
+                title:             title.trimmed,
+                type:              type,
+                priority:          priority,
+                scheduledDate:     type == .event ? eventDate : (hasDate ? scheduledDate : nil),
+                scheduledTime:     type == .event ? eventDate : (hasTime ? combinedDateAndTime : nil),
+                dueDate:           hasDueDate ? dueDate : nil,
+                isPromise:         isPromise,
+                promisedTo:        promisedTo.isBlank ? nil : promisedTo.trimmed,
+                originalStatement: isPromise ? title.trimmed : nil,
+                notes:             notes
+            )
+            task.isRecurring = isRecurring
+            appState.taskRepo.insert(task)
+        }
         try? appState.taskRepo.save()
 
         // Schedule notification if time is set
@@ -220,7 +263,20 @@ struct AddTaskView: View {
         }
 
         HapticManager.success()
+        if taskToEdit == nil {
+            appState.motivationMoment = AssistantService.motivation(for: .taskCreated, taskTitle: task.title)
+        }
+        onSave?()
         dismiss()
+    }
+
+    private var combinedDateAndTime: Date {
+        let dateParts = Calendar.current.dateComponents([.year, .month, .day], from: scheduledDate)
+        let timeParts = Calendar.current.dateComponents([.hour, .minute], from: scheduledTime)
+        var components = dateParts
+        components.hour = timeParts.hour
+        components.minute = timeParts.minute
+        return Calendar.current.date(from: components) ?? scheduledTime
     }
 
     // MARK: - Helpers

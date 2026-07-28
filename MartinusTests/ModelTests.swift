@@ -48,6 +48,14 @@ final class ModelTests: XCTestCase {
         XCTAssertNotNil(task.id)
     }
 
+    func test_userProfile_personalDetailsDefaultToEmpty() {
+        let profile = UserProfile(name: "Martin")
+        XCTAssertEqual(profile.name, "Martin")
+        XCTAssertNil(profile.age)
+        XCTAssertNil(profile.personalNote)
+        XCTAssertNil(profile.profileImageData)
+    }
+
     // MARK: - Goal
 
     func test_goal_defaultProgressIsZero() {

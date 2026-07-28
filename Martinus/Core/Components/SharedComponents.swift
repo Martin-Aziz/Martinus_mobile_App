@@ -1,4 +1,108 @@
 import SwiftUI
+import UIKit
+
+struct CinematicBackgroundView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    var variant: Int? = nil
+
+    private var imageName: String {
+        let names = ["CinematicRoman", "CinematicGreek", "CinematicArena"]
+        let day = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 0
+        return names[(variant ?? day) % names.count]
+    }
+
+    var body: some View {
+        GeometryReader { proxy in
+            ZStack {
+                Image(imageName)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: proxy.size.width, height: proxy.size.height)
+                    .clipped()
+
+                Color.ffBackground
+                    .opacity(colorScheme == .dark ? 0.38 : 0.60)
+
+                LinearGradient(
+                    colors: [
+                        Color.ffBackground.opacity(0.70),
+                        Color.ffBackground.opacity(0.18),
+                        Color.ffBackground.opacity(0.60)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            }
+        }
+        .ignoresSafeArea()
+        .accessibilityHidden(true)
+    }
+}
+
+struct UserAvatarView: View {
+    let profile: UserProfile?
+    var size: CGFloat = 52
+
+    var body: some View {
+        Group {
+            if let data = profile?.profileImageData, let image = UIImage(data: data) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+            } else {
+                ZStack {
+                    LinearGradient.ffBrand
+                    Image(systemName: "person.fill")
+                        .font(.system(size: size * 0.42, weight: .semibold))
+                        .foregroundColor(.white)
+                }
+            }
+        }
+        .frame(width: size, height: size)
+        .clipShape(Circle())
+        .overlay(Circle().stroke(Color.white.opacity(0.55), lineWidth: 2))
+        .shadow(color: Color.black.opacity(0.28), radius: 8, y: 4)
+        .accessibilityLabel("Profile")
+    }
+}
+
+struct CompactCountdownLabel: View {
+    let target: Date
+    var prefix: String? = nil
+
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 60)) { context in
+            let interval = target.timeIntervalSince(context.date)
+            HStack(spacing: 4) {
+                Image(systemName: interval <= 0 ? "exclamationmark.circle.fill" : "hourglass")
+                Text([prefix, countdownText(interval)].compactMap { $0 }.joined(separator: " · "))
+            }
+            .font(.ffCaption2)
+            .foregroundColor(countdownColor(interval))
+            .padding(.horizontal, 7)
+            .padding(.vertical, 4)
+            .background(countdownColor(interval).opacity(0.13))
+            .clipShape(Capsule())
+        }
+    }
+
+    private func countdownText(_ interval: TimeInterval) -> String {
+        guard interval > 0 else { return "Past due" }
+        let totalMinutes = Int(interval) / 60
+        let days = totalMinutes / 1_440
+        let hours = (totalMinutes % 1_440) / 60
+        let minutes = totalMinutes % 60
+        if days > 0 { return "\(days)d \(hours)h remaining" }
+        if hours > 0 { return "\(hours)h \(minutes)m remaining" }
+        return "\(max(1, minutes))m remaining"
+    }
+
+    private func countdownColor(_ interval: TimeInterval) -> Color {
+        if interval <= 0 || interval <= 3 * 3_600 { return .ffDanger }
+        if interval <= 24 * 3_600 { return .ffWarning }
+        return .ffSecondary
+    }
+}
 
 // MARK: - GlassCard
 /// Glassmorphism container card matching the design system.
@@ -135,7 +239,7 @@ struct ProgressRing: View {
     var body: some View {
         ZStack {
             Circle()
-                .stroke(Color.white.opacity(0.08), lineWidth: lineWidth)
+                .stroke(Color.ffGlassBorder.opacity(0.65), lineWidth: lineWidth)
             Circle()
                 .trim(from: 0, to: progress)
                 .stroke(gradient, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))

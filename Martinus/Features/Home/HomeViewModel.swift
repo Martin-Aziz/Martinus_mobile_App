@@ -14,6 +14,7 @@ final class HomeViewModel {
     var isLoaded       = false
     var showChangeFocus = false
     var showAllUpcoming = false
+    var motivationMoment: MotivationMoment?
     // PM artifact P1: was the recommendation accepted or overridden?
     var recommendationWasShown = false
 
@@ -60,6 +61,7 @@ final class HomeViewModel {
     func markComplete(_ task: FocusTask) {
         taskRepo?.markComplete(task)
         analytics.record(EventName.taskCompleted)
+        motivationMoment = AssistantService.motivation(for: .taskCompleted, taskTitle: task.title)
         HapticManager.success()
         Task { await refresh() }
     }
@@ -71,6 +73,18 @@ final class HomeViewModel {
         }
         try? taskRepo?.setMainFocus(task)
         Task { await refresh() }
+    }
+
+    var focusCandidates: [FocusTask] {
+        tasks.filter { !$0.isCompleted && $0.status != .irrelevant }
+    }
+
+    func focusProgress(for task: FocusTask) -> Double {
+        switch task.status {
+        case .done:       return 1
+        case .inProgress: return 0.5
+        default:          return 0
+        }
     }
 
     /// PM artifact P6: archive a task (no-shame path for irrelevant items).

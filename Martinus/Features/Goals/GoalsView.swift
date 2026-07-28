@@ -66,7 +66,7 @@ struct GoalsView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.ffBackground.ignoresSafeArea()
+                CinematicBackgroundView(variant: 2)
 
                 VStack(spacing: 0) {
                     headerBar
@@ -222,10 +222,8 @@ struct GoalCard: View {
                     )
                 }
                 Spacer()
-                if let days = goal.daysUntilDeadline, days >= 0 {
-                    Text("\(days)d left")
-                        .font(.ffCaption)
-                        .foregroundColor(.ffTextTertiary)
+                if let deadline = goal.targetDate, !goal.isCompleted {
+                    CompactCountdownLabel(target: deadline, prefix: "Goal")
                 }
             }
         }
@@ -277,7 +275,7 @@ struct GoalDetailView: View {
 
     var body: some View {
         ZStack {
-            Color.ffBackground.ignoresSafeArea()
+            CinematicBackgroundView(variant: 2)
             ScrollView {
                 VStack(alignment: .leading, spacing: Spacing.xl) {
                     // Hero
@@ -305,6 +303,10 @@ struct GoalDetailView: View {
                             StatTile(label: "Days Left", value: "\(days)",
                                      icon: "calendar", color: days <= 3 ? .ffDanger : .ffSecondary)
                         }
+                    }
+
+                    if let deadline = goal.targetDate, !goal.isCompleted {
+                        TaskCountdownView(target: deadline, isEvent: true)
                     }
 
                     // Progress slider
@@ -400,10 +402,15 @@ struct AddGoalView: View {
     private let emojiOptions = ["⭐","🚀","💪","📚","💰","❤️","🎯","🌱","🏆","✈️","🎨","💻","🏋️","📝","🧘"]
     private let colorOptions  = ["#8C65FF","#00D4FF","#22C55E","#F59E0B","#EC4899","#F97316","#06B6D4"]
 
+    init(targetDate: Date? = nil) {
+        _targetDate = State(initialValue: targetDate)
+        _hasDeadline = State(initialValue: targetDate != nil)
+    }
+
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.ffBackground.ignoresSafeArea()
+                CinematicBackgroundView(variant: 2)
                 ScrollView {
                     VStack(spacing: Spacing.xl) {
                         // Emoji picker
@@ -476,10 +483,8 @@ struct AddGoalView: View {
                                 DatePicker("Target Date", selection: Binding(
                                     get: { targetDate ?? Date().addingTimeInterval(30*24*3600) },
                                     set: { targetDate = $0 }
-                                ), displayedComponents: .date)
-                                .datePickerStyle(.graphical)
+                                ), displayedComponents: [.date, .hourAndMinute])
                                 .tint(.ffPrimary)
-                                .colorScheme(.dark)
                             }
                         }
                         .padding(Spacing.base)

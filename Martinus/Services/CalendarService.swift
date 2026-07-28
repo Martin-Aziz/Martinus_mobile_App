@@ -33,7 +33,7 @@ final class CalendarService: ObservableObject {
 
     func checkAuthorizationStatus() {
         let status = EKEventStore.authorizationStatus(for: .event)
-        isAuthorized = (status == .fullAccess || status == .authorized)
+        isAuthorized = status == .fullAccess
     }
 
     func loadTodayEvents() async {
