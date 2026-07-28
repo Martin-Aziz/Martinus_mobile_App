@@ -61,7 +61,7 @@ struct QuotesView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.ffBackground.ignoresSafeArea()
+                CinematicBackgroundView(variant: 2)
 
                 VStack(spacing: 0) {
                     headerBar
@@ -216,7 +216,7 @@ struct QuoteDetailSheet: View {
 
     var body: some View {
         ZStack {
-            Color.ffBackground.ignoresSafeArea()
+            CinematicBackgroundView(variant: 2)
             VStack(spacing: Spacing.xl) {
                 // Pull indicator
                 Capsule()

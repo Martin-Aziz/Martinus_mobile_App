@@ -22,7 +22,7 @@ struct ReentryView: View {
 
     var body: some View {
         ZStack {
-            Color.ffBackground.ignoresSafeArea()
+            CinematicBackgroundView(variant: 2)
             backgroundGlow
 
             VStack(spacing: 0) {

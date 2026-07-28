@@ -9,6 +9,10 @@ final class AppState {
     var fontStyle: AppFontStyle = AppFontStyle.saved {
         didSet { fontStyle.save() }
     }
+    var appearance: AppAppearance = AppAppearance.saved {
+        didSet { appearance.save() }
+    }
+    var motivationMoment: MotivationMoment?
     // Navigation
     var selectedTab: AppTab = .home
     var showAddTask      = false
@@ -59,10 +63,11 @@ final class AppState {
         calendar.checkAuthorizationStatus()
         notifications.registerNotificationCategories()
 
-        // Seed quotes if first launch
-        let quoteCount = (try? quoteRepo.count()) ?? 0
-        if quoteCount == 0 {
-            QuotesSeed.seed(into: modelContext)
+        // Add newly shipped quotes without duplicating a user's existing library.
+        let existingTexts = Set(((try? quoteRepo.fetchAll()) ?? []).map(\.text))
+        let missingQuotes = QuotesSeed.allQuotes.filter { !existingTexts.contains($0.text) }
+        if !missingQuotes.isEmpty {
+            missingQuotes.forEach { quoteRepo.insert($0) }
             try? quoteRepo.save()
         }
 
@@ -102,6 +107,26 @@ final class AppState {
         reentryAtRiskGoals  = Array(atRisk.prefix(2))
         showReentry         = true
     }
+}
+
+enum AppAppearance: String, CaseIterable, Identifiable {
+    case system, light, dark
+
+    var id: String { rawValue }
+    var title: String { rawValue.capitalized }
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
+        }
+    }
+
+    static var saved: AppAppearance {
+        AppAppearance(rawValue: UserDefaults.standard.string(forKey: "martinus.appearance") ?? "") ?? .system
+    }
+
+    func save() { UserDefaults.standard.set(rawValue, forKey: "martinus.appearance") }
 }
 
 enum AppFontStyle: String, CaseIterable, Identifiable {

@@ -48,7 +48,7 @@ struct JournalView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.ffBackground.ignoresSafeArea()
+                CinematicBackgroundView(variant: 0)
                 VStack(spacing: 0) {
                     headerBar
                     weekMoodBar
@@ -218,7 +218,7 @@ struct JournalEntryDetailView: View {
 
     var body: some View {
         ZStack {
-            Color.ffBackground.ignoresSafeArea()
+            CinematicBackgroundView(variant: 0)
             ScrollView {
                 VStack(alignment: .leading, spacing: Spacing.xl) {
                     // Header
@@ -313,11 +313,16 @@ struct AddJournalEntryView: View {
     @State private var focus      = 5
     @State private var tagInput   = ""
     @State private var tags:      [String] = []
+    private let entryDate: Date
+
+    init(date: Date = Date()) {
+        self.entryDate = date
+    }
 
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.ffBackground.ignoresSafeArea()
+                CinematicBackgroundView(variant: 0)
                 ScrollView {
                     VStack(spacing: Spacing.xl) {
                         moodSection
@@ -463,6 +468,8 @@ struct AddJournalEntryView: View {
             gratitude:  gratitude,
             tags:       tags
         )
+        entry.date = entryDate
+        entry.updatedAt = Date()
         appState.journalRepo.insert(entry)
         try? appState.journalRepo.save()
         HapticManager.success()

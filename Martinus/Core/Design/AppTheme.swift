@@ -11,19 +11,19 @@ extension Color {
     static let ffNeutral   = Color(hex: "#6B7280")
 
     // Backgrounds
-    static let ffBackground      = Color(hex: "#0A0A0F")
-    static let ffSurface         = Color(hex: "#13131A")
-    static let ffSurfaceElevated = Color(hex: "#1C1C28")
+    static let ffBackground      = Color.dynamic(light: "#F6F5FA", dark: "#0A0A0F")
+    static let ffSurface         = Color.dynamic(light: "#FFFFFF", dark: "#13131A")
+    static let ffSurfaceElevated = Color.dynamic(light: "#EEEAF6", dark: "#1C1C28")
 
     // Glass
-    static let ffGlass          = Color.white.opacity(0.06)
-    static let ffGlassBorder    = Color.white.opacity(0.12)
-    static let ffGlassBorderHover = Color.white.opacity(0.20)
+    static let ffGlass          = Color.dynamic(light: "#FFFFFF", dark: "#FFFFFF").opacity(0.10)
+    static let ffGlassBorder    = Color.dynamic(light: "#4B3F72", dark: "#FFFFFF").opacity(0.14)
+    static let ffGlassBorderHover = Color.dynamic(light: "#4B3F72", dark: "#FFFFFF").opacity(0.22)
 
     // Text
-    static let ffTextPrimary   = Color.white
-    static let ffTextSecondary = Color.white.opacity(0.60)
-    static let ffTextTertiary  = Color.white.opacity(0.35)
+    static let ffTextPrimary   = Color.dynamic(light: "#18151F", dark: "#FFFFFF")
+    static let ffTextSecondary = Color.dynamic(light: "#5F586B", dark: "#FFFFFF").opacity(0.68)
+    static let ffTextTertiary  = Color.dynamic(light: "#81798D", dark: "#FFFFFF").opacity(0.48)
 
     // Priority colors
     static let ffPriorityHigh   = Color(hex: "#EF4444")
@@ -50,6 +50,12 @@ extension Color {
             (a, r, g, b) = (255, 0, 0, 0)
         }
         self.init(.sRGB, red: Double(r) / 255, green: Double(g) / 255, blue: Double(b) / 255, opacity: Double(a) / 255)
+    }
+
+    static func dynamic(light: String, dark: String) -> Color {
+        Color(UIColor { traits in
+            UIColor(Color(hex: traits.userInterfaceStyle == .dark ? dark : light))
+        })
     }
 }
 
@@ -125,20 +131,26 @@ struct GlassmorphismModifier: ViewModifier {
     var backgroundOpacity: Double = 0.06
     var blurRadius: CGFloat = 20
 
+    @ViewBuilder
     func body(content: Content) -> some View {
-        content
-            .background(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(.ultraThinMaterial)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .fill(Color.white.opacity(backgroundOpacity))
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .strokeBorder(Color.white.opacity(borderOpacity), lineWidth: 1)
-                    )
-            )
+        if #available(iOS 26.0, *) {
+            content
+                .glassEffect(.regular, in: .rect(cornerRadius: cornerRadius))
+        } else {
+            content
+                .background(
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .fill(.ultraThinMaterial)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: cornerRadius)
+                                .fill(Color.ffGlass.opacity(max(backgroundOpacity, 0.04)))
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: cornerRadius)
+                                .strokeBorder(Color.ffGlassBorder.opacity(max(borderOpacity, 0.12)), lineWidth: 1)
+                        )
+                )
+        }
     }
 }
 

@@ -281,7 +281,7 @@ final class FocusTask {
 
     var isCompleted: Bool { status == .done }
 
-    var displayDate: Date? { scheduledDate ?? dueDate }
+    var displayDate: Date? { scheduledTime ?? scheduledDate ?? dueDate }
 }
 
 // MARK: - Goal
@@ -512,6 +512,9 @@ final class FocusSessionRecord {
 final class UserProfile {
     var id:               UUID
     var name:             String
+    var age:              Int?
+    var personalNote:     String?
+    @Attribute(.externalStorage) var profileImageData: Data?
     var onboardingDone:   Bool
     var currentStreakDays: Int
     var longestStreakDays: Int
@@ -536,6 +539,9 @@ final class UserProfile {
     init(name: String = "Friend") {
         self.id                      = UUID()
         self.name                    = name
+        self.age                     = nil
+        self.personalNote            = nil
+        self.profileImageData        = nil
         self.onboardingDone          = false
         self.currentStreakDays        = 0
         self.longestStreakDays        = 0

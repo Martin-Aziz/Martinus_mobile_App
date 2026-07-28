@@ -49,7 +49,7 @@ struct OnboardingView: View {
 
     var body: some View {
         ZStack {
-            Color.ffBackground.ignoresSafeArea()
+            CinematicBackgroundView(variant: 1)
             backgroundBlobs
 
             VStack(spacing: 0) {

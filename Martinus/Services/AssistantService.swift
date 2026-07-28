@@ -6,6 +6,45 @@ import SwiftData
 /// shown on the Home screen assistant card.
 struct AssistantService {
 
+    private static let actionQuotes: [(text: String, author: String)] = [
+        ("Discipline is the bridge between goals and accomplishment.", "Jim Rohn"),
+        ("The secret of getting ahead is getting started.", "Mark Twain"),
+        ("Success is the sum of small efforts, repeated day in and day out.", "Robert Collier"),
+        ("Great things are done by a series of small things brought together.", "Vincent van Gogh"),
+        ("The future depends on what you do today.", "Mahatma Gandhi")
+    ]
+
+    static func motivation(for action: MotivationAction, taskTitle: String) -> MotivationMoment {
+        let index = abs(taskTitle.hashValue) % actionQuotes.count
+        let quote = actionQuotes[index]
+        switch action {
+        case .taskCreated:
+            return MotivationMoment(
+                title: "You are ready to begin",
+                message: "You turned an intention into a clear next step. That is how momentum starts.",
+                quote: quote.text,
+                author: quote.author,
+                symbol: "sparkles"
+            )
+        case .taskCompleted:
+            return MotivationMoment(
+                title: "Excellent work",
+                message: "You kept a commitment to yourself by completing “\(taskTitle).” Take a moment to notice that progress.",
+                quote: quote.text,
+                author: quote.author,
+                symbol: "checkmark.seal.fill"
+            )
+        case .focusStarted:
+            return MotivationMoment(
+                title: "Your attention has a purpose",
+                message: "Starting before you feel perfectly ready builds confidence through evidence.",
+                quote: quote.text,
+                author: quote.author,
+                symbol: "timer"
+            )
+        }
+    }
+
     // MARK: - Public API
 
     /// Generate the single most relevant insight for right now.
@@ -44,13 +83,13 @@ struct AssistantService {
             return "Today looks busy. Let us protect your focus."
         }
 
-        if todayTasks.count == 0 {
-            return "Your day is open. A great moment to move a goal forward."
-        }
-
         let completed = tasks.filter { $0.isCompleted && $0.completedAt?.isToday == true }
         if completed.count >= 3 {
-            return "You are making solid progress today."
+            return "You completed \(completed.count) tasks today. That is solid progress—well done."
+        }
+
+        if todayTasks.count == 0 {
+            return "Your day is open. A great moment to move a goal forward."
         }
 
         return "One clear step is enough to begin."
@@ -169,4 +208,15 @@ struct AssistantService {
             ]
         )
     }
+}
+
+enum MotivationAction { case taskCreated, taskCompleted, focusStarted }
+
+struct MotivationMoment: Identifiable {
+    let id = UUID()
+    let title: String
+    let message: String
+    let quote: String
+    let author: String
+    let symbol: String
 }

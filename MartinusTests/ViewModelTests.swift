@@ -172,7 +172,12 @@ final class ViewModelTests: XCTestCase {
 
     func test_quoteRepository_toggleFavorite_alternates() throws {
         let repo  = QuoteRepository(modelContext: modelContext)
-        let quote = QuotesSeed.allQuotes[0]
+        let quote = Quote(
+            text: "Fresh test quote",
+            author: "Test Author",
+            category: .motivation,
+            explanation: "Isolated fixture"
+        )
         repo.insert(quote)
         try repo.save()
 

@@ -1,5 +1,5 @@
 import Foundation
-import UserNotifications
+@preconcurrency import UserNotifications
 import SwiftData
 
 // MARK: - NotificationService
@@ -106,9 +106,10 @@ final class NotificationService: ObservableObject {
     }
 
     func removeNotifications(withPrefix prefix: String) {
-        center.getPendingNotificationRequests { requests in
+        let notificationCenter = center
+        notificationCenter.getPendingNotificationRequests { requests in
             let ids = requests.filter { $0.identifier.hasPrefix(prefix) }.map { $0.identifier }
-            self.center.removePendingNotificationRequests(withIdentifiers: ids)
+            notificationCenter.removePendingNotificationRequests(withIdentifiers: ids)
         }
     }
 
